@@ -12,22 +12,22 @@
 namespace Symfony\Bundle\MakerBundle\Maker;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\DBAL\Types\Type;
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Bundle\MakerBundle\DependencyBuilder;
 use Symfony\Bundle\MakerBundle\Doctrine\DoctrineHelper;
+use Symfony\Bundle\MakerBundle\Doctrine\EntityClassGenerator;
+use Symfony\Bundle\MakerBundle\Doctrine\EntityRegenerator;
+use Symfony\Bundle\MakerBundle\Doctrine\EntityRelation;
+use Symfony\Bundle\MakerBundle\Doctrine\ORMDependencyBuilder;
 use Symfony\Bundle\MakerBundle\Exception\RuntimeCommandException;
+use Symfony\Bundle\MakerBundle\FileManager;
 use Symfony\Bundle\MakerBundle\Generator;
 use Symfony\Bundle\MakerBundle\InputAwareMakerInterface;
 use Symfony\Bundle\MakerBundle\InputConfiguration;
 use Symfony\Bundle\MakerBundle\Str;
-use Symfony\Bundle\MakerBundle\Doctrine\EntityRegenerator;
-use Symfony\Bundle\MakerBundle\FileManager;
+use Symfony\Bundle\MakerBundle\Util\ClassDetails;
 use Symfony\Bundle\MakerBundle\Util\ClassSourceManipulator;
-use Symfony\Bundle\MakerBundle\Doctrine\EntityRelation;
 use Symfony\Bundle\MakerBundle\Validator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -35,7 +35,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Finder\SplFileInfo;
+use Symfony\UX\Turbo\Attribute\Broadcast;
 
 /**
  * @author Javier Eguiluz <javier.eguiluz@gmail.com>
@@ -47,18 +47,26 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
     private $fileManager;
     private $doctrineHelper;
     private $generator;
+    private $entityClassGenerator;
 
-    public function __construct(FileManager $fileManager, DoctrineHelper $doctrineHelper, string $projectDirectory, Generator $generator = null)
+    public function __construct(FileManager $fileManager, DoctrineHelper $doctrineHelper, string $projectDirectory, Generator $generator = null, EntityClassGenerator $entityClassGenerator = null)
     {
         $this->fileManager = $fileManager;
         $this->doctrineHelper = $doctrineHelper;
         // $projectDirectory is unused, argument kept for BC
 
         if (null === $generator) {
-            @trigger_error(sprintf('Passing a "%s" instance as 4th argument is mandatory since version 1.5.', Generator::class), E_USER_DEPRECATED);
+            @trigger_error(sprintf('Passing a "%s" instance as 4th argument is mandatory since version 1.5.', Generator::class), \E_USER_DEPRECATED);
             $this->generator = new Generator($fileManager, 'App\\');
         } else {
             $this->generator = $generator;
+        }
+
+        if (null === $entityClassGenerator) {
+            @trigger_error(sprintf('Passing a "%s" instance as 5th argument is mandatory since version 1.15.1', EntityClassGenerator::class), \E_USER_DEPRECATED);
+            $this->entityClassGenerator = new EntityClassGenerator($generator, $this->doctrineHelper);
+        } else {
+            $this->entityClassGenerator = $entityClassGenerator;
         }
     }
 
@@ -67,12 +75,17 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
         return 'make:entity';
     }
 
+    public static function getCommandDescription(): string
+    {
+        return 'Creates or updates a Doctrine entity class, and optionally an API Platform resource';
+    }
+
     public function configureCommand(Command $command, InputConfiguration $inputConf)
     {
         $command
-            ->setDescription('Creates or updates a Doctrine entity class, and optionally an API Platform resource')
             ->addArgument('name', InputArgument::OPTIONAL, sprintf('Class name of the entity to create or update (e.g. <fg=yellow>%s</>)', Str::asClassName(Str::getRandomTerm())))
             ->addOption('api-resource', 'a', InputOption::VALUE_NONE, 'Mark this class as an API Platform resource (expose a CRUD API for it)')
+            ->addOption('broadcast', 'b', InputOption::VALUE_NONE, 'Add the ability to broadcast entity updates using Symfony UX Turbo?')
             ->addOption('regenerate', null, InputOption::VALUE_NONE, 'Instead of adding new fields, simply generate the methods (e.g. getter/setter) for existing fields')
             ->addOption('overwrite', null, InputOption::VALUE_NONE, 'Overwrite any existing getter/setter methods')
             ->setHelp(file_get_contents(__DIR__.'/../Resources/help/MakeEntity.txt'))
@@ -99,20 +112,6 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
             return;
         }
 
-        $entityFinder = $this->fileManager->createFinder('src/Entity/')
-            // remove if/when we allow entities in subdirectories
-            ->depth('<1')
-            ->name('*.php');
-        $classes = [];
-        /** @var SplFileInfo $item */
-        foreach ($entityFinder as $item) {
-            if (!$item->getRelativePathname()) {
-                continue;
-            }
-
-            $classes[] = str_replace(['.php', '/'], ['', '\\'], $item->getRelativePathname());
-        }
-
         $argument = $command->getDefinition()->getArgument('name');
         $question = $this->createEntityClassQuestion($argument->getDescription());
         $value = $io->askQuestion($question);
@@ -130,14 +129,22 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
 
             $input->setOption('api-resource', $value);
         }
+
+        if (
+            !$input->getOption('broadcast') &&
+            class_exists(Broadcast::class) &&
+            !class_exists($this->generator->createClassNameDetails($value, 'Entity\\')->getFullName())
+        ) {
+            $description = $command->getDefinition()->getOption('broadcast')->getDescription();
+            $question = new ConfirmationQuestion($description, false);
+            $value = $io->askQuestion($question);
+
+            $input->setOption('broadcast', $value);
+        }
     }
 
     public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator)
     {
-        if (\PHP_VERSION_ID < 70100) {
-            throw new RuntimeCommandException('The make:entity command requires that you use PHP 7.1 or higher.');
-        }
-
         $overwrite = $input->getOption('overwrite');
 
         // the regenerate option has entirely custom behavior
@@ -153,33 +160,28 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
             'Entity\\'
         );
 
-        $repositoryClassDetails = $generator->createClassNameDetails(
-            $entityClassDetails->getRelativeName(),
-            'Repository\\',
-            'Repository'
-        );
-
         $classExists = class_exists($entityClassDetails->getFullName());
         if (!$classExists) {
-            $entityPath = $generator->generateClass(
-                $entityClassDetails->getFullName(),
-                'doctrine/Entity.tpl.php',
-                [
-                    'repository_full_class_name' => $repositoryClassDetails->getFullName(),
-                    'api_resource' => $input->getOption('api-resource'),
-                ]
+            $broadcast = $input->getOption('broadcast');
+            $entityPath = $this->entityClassGenerator->generateEntityClass(
+                $entityClassDetails,
+                $input->getOption('api-resource'),
+                false,
+                true,
+                $broadcast
             );
 
-            $entityAlias = strtolower($entityClassDetails->getShortName()[0]);
-            $generator->generateClass(
-                $repositoryClassDetails->getFullName(),
-                'doctrine/Repository.tpl.php',
-                [
-                    'entity_full_class_name' => $entityClassDetails->getFullName(),
-                    'entity_class_name' => $entityClassDetails->getShortName(),
-                    'entity_alias' => $entityAlias,
-                ]
-            );
+            if ($broadcast) {
+                $shortName = $entityClassDetails->getShortName();
+                $generator->generateTemplate(
+                    sprintf('broadcast/%s.stream.html.twig', $shortName),
+                    'doctrine/broadcast_twig_template.tpl.php',
+                    [
+                        'class_name' => Str::asSnakeCase($shortName),
+                        'class_name_plural' => Str::asSnakeCase(Str::singularCamelCaseToPluralCamelCase($shortName)),
+                    ]
+                );
+            }
 
             $generator->writeChanges();
         }
@@ -225,8 +227,13 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
             } elseif ($newField instanceof EntityRelation) {
                 // both overridden below for OneToMany
                 $newFieldName = $newField->getOwningProperty();
-                $otherManipulatorFilename = $this->getPathOfClass($newField->getInverseClass());
-                $otherManipulator = $this->createClassManipulator($otherManipulatorFilename, $io, $overwrite);
+                if ($newField->isSelfReferencing()) {
+                    $otherManipulatorFilename = $entityPath;
+                    $otherManipulator = $manipulator;
+                } else {
+                    $otherManipulatorFilename = $this->getPathOfClass($newField->getInverseClass());
+                    $otherManipulator = $this->createClassManipulator($otherManipulatorFilename, $io, $overwrite);
+                }
                 switch ($newField->getType()) {
                     case EntityRelation::MANY_TO_ONE:
                         if ($newField->getOwningClass() === $entityClassDetails->getFullName()) {
@@ -289,7 +296,7 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
 
         $this->writeSuccessMessage($io);
         $io->text([
-            'Next: When you\'re ready, create a migration with <comment>make:migration</comment>',
+            'Next: When you\'re ready, create a migration with <info>php bin/console make:migration</info>',
             '',
         ]);
     }
@@ -303,17 +310,14 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
             );
         }
 
-        // guarantee DoctrineBundle
-        $dependencies->addClassDependency(
-            DoctrineBundle::class,
-            'orm'
-        );
+        if (null !== $input && $input->getOption('broadcast')) {
+            $dependencies->addClassDependency(
+                Broadcast::class,
+                'ux-turbo-mercure'
+            );
+        }
 
-        // guarantee ORM
-        $dependencies->addClassDependency(
-            Column::class,
-            'orm'
-        );
+        ORMDependencyBuilder::buildDependencies($dependencies);
     }
 
     private function askForNextField(ConsoleStyle $io, array $fields, string $entityClass, bool $isFirstField)
@@ -356,11 +360,19 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
             $defaultType = 'boolean';
         } elseif (0 === strpos($snakeCasedField, 'has_')) {
             $defaultType = 'boolean';
+        } elseif ('uuid' === $snakeCasedField) {
+            $defaultType = 'uuid';
+        } elseif ('guid' === $snakeCasedField) {
+            $defaultType = 'guid';
         }
 
         $type = null;
+        $types = Type::getTypesMap();
+        // remove deprecated json_array
+        unset($types[Type::JSON_ARRAY]);
+
         $allValidTypes = array_merge(
-            array_keys(Type::getTypesMap()),
+            array_keys($types),
             EntityRelation::getValidRelationTypes(),
             ['relation']
         );
@@ -389,7 +401,7 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
 
         // this is a normal field
         $data = ['fieldName' => $fieldName, 'type' => $type];
-        if ('string' == $type) {
+        if ('string' === $type) {
             // default to 255, avoid the question
             $data['length'] = $io->ask('Field length', 255, [Validator::class, 'validateLength']);
         } elseif ('decimal' === $type) {
@@ -411,6 +423,12 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
     {
         $allTypes = Type::getTypesMap();
 
+        if ('Hyper' === getenv('TERM_PROGRAM')) {
+            $wizard = 'wizard 🧙';
+        } else {
+            $wizard = '\\' === \DIRECTORY_SEPARATOR ? 'wizard' : 'wizard 🧙';
+        }
+
         $typesTable = [
             'main' => [
                 'string' => [],
@@ -420,7 +438,7 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
                 'float' => [],
             ],
             'relation' => [
-                'relation' => 'a wizard will help you build the relation',
+                'relation' => 'a '.$wizard.' will help you build the relation',
                 EntityRelation::MANY_TO_ONE => [],
                 EntityRelation::ONE_TO_MANY => [],
                 EntityRelation::MANY_TO_MANY => [],
@@ -487,23 +505,9 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
 
     private function createEntityClassQuestion(string $questionText): Question
     {
-        $entityFinder = $this->fileManager->createFinder('src/Entity/')
-            // remove if/when we allow entities in subdirectories
-            ->depth('<1')
-            ->name('*.php');
-        $classes = [];
-        /** @var SplFileInfo $item */
-        foreach ($entityFinder as $item) {
-            if (!$item->getRelativePathname()) {
-                continue;
-            }
-
-            $classes[] = str_replace('/', '\\', str_replace('.php', '', $item->getRelativePathname()));
-        }
-
         $question = new Question($questionText);
         $question->setValidator([Validator::class, 'notBlank']);
-        $question->setAutocompleterValues($classes);
+        $question->setAutocompleterValues($this->doctrineHelper->getEntitiesForAutocomplete());
 
         return $question;
     }
@@ -515,17 +519,19 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
         while (null === $targetEntityClass) {
             $question = $this->createEntityClassQuestion('What class should this entity be related to?');
 
-            $targetEntityClass = $io->askQuestion($question);
+            $answeredEntityClass = $io->askQuestion($question);
 
-            if (!class_exists($targetEntityClass)) {
-                if (!class_exists($this->getEntityNamespace().'\\'.$targetEntityClass)) {
-                    $io->error(sprintf('Unknown class "%s"', $targetEntityClass));
-                    $targetEntityClass = null;
-
-                    continue;
-                }
-
-                $targetEntityClass = $this->getEntityNamespace().'\\'.$targetEntityClass;
+            // find the correct class name - but give priority over looking
+            // in the Entity namespace versus just checking the full class
+            // name to avoid issues with classes like "Directory" that exist
+            // in PHP's core.
+            if (class_exists($this->getEntityNamespace().'\\'.$answeredEntityClass)) {
+                $targetEntityClass = $this->getEntityNamespace().'\\'.$answeredEntityClass;
+            } elseif (class_exists($answeredEntityClass)) {
+                $targetEntityClass = $answeredEntityClass;
+            } else {
+                $io->error(sprintf('Unknown class "%s"', $answeredEntityClass));
+                continue;
             }
         }
 
@@ -746,17 +752,17 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
         $rows = [];
         $rows[] = [
             EntityRelation::MANY_TO_ONE,
-            sprintf("Each <comment>%s</comment> relates to (has) <info>one</info> <comment>%s</comment>.\nEach <comment>%s</comment> can relate/has to (have) <info>many</info> <comment>%s</comment> objects", $originalEntityShort, $targetEntityShort, $targetEntityShort, $originalEntityShort),
+            sprintf("Each <comment>%s</comment> relates to (has) <info>one</info> <comment>%s</comment>.\nEach <comment>%s</comment> can relate to (can have) <info>many</info> <comment>%s</comment> objects", $originalEntityShort, $targetEntityShort, $targetEntityShort, $originalEntityShort),
         ];
         $rows[] = ['', ''];
         $rows[] = [
             EntityRelation::ONE_TO_MANY,
-            sprintf("Each <comment>%s</comment> relates can relate to (have) <info>many</info> <comment>%s</comment> objects.\nEach <comment>%s</comment> relates to (has) <info>one</info> <comment>%s</comment>", $originalEntityShort, $targetEntityShort, $targetEntityShort, $originalEntityShort),
+            sprintf("Each <comment>%s</comment> can relate to (can have) <info>many</info> <comment>%s</comment> objects.\nEach <comment>%s</comment> relates to (has) <info>one</info> <comment>%s</comment>", $originalEntityShort, $targetEntityShort, $targetEntityShort, $originalEntityShort),
         ];
         $rows[] = ['', ''];
         $rows[] = [
             EntityRelation::MANY_TO_MANY,
-            sprintf("Each <comment>%s</comment> relates can relate to (have) <info>many</info> <comment>%s</comment> objects.\nEach <comment>%s</comment> can also relate to (have) <info>many</info> <comment>%s</comment> objects", $originalEntityShort, $targetEntityShort, $targetEntityShort, $originalEntityShort),
+            sprintf("Each <comment>%s</comment> can relate to (can have) <info>many</info> <comment>%s</comment> objects.\nEach <comment>%s</comment> can also relate to (can also have) <info>many</info> <comment>%s</comment> objects", $originalEntityShort, $targetEntityShort, $targetEntityShort, $originalEntityShort),
         ];
         $rows[] = ['', ''];
         $rows[] = [
@@ -795,7 +801,9 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
 
     private function getPathOfClass(string $class): string
     {
-        return (new \ReflectionClass($class))->getFileName();
+        $classDetails = new ClassDetails($class);
+
+        return $classDetails->getPath();
     }
 
     private function isClassInVendor(string $class): bool
@@ -807,7 +815,7 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
 
     private function regenerateEntities(string $classOrNamespace, bool $overwrite, Generator $generator)
     {
-        $regenerator = new EntityRegenerator($this->doctrineHelper, $this->fileManager, $generator, $overwrite);
+        $regenerator = new EntityRegenerator($this->doctrineHelper, $this->fileManager, $generator, $this->entityClassGenerator, $overwrite);
         $regenerator->regenerateEntities($classOrNamespace);
     }
 
@@ -827,7 +835,7 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
     private function doesEntityUseAnnotationMapping(string $className): bool
     {
         if (!class_exists($className)) {
-            $otherClassMetadatas = $this->doctrineHelper->getMetadata(Str::getNamespace($className), true);
+            $otherClassMetadatas = $this->doctrineHelper->getMetadata(Str::getNamespace($className).'\\', true);
 
             // if we have no metadata, we should assume this is the first class being mapped
             if (empty($otherClassMetadatas)) {
@@ -837,9 +845,7 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
             $className = reset($otherClassMetadatas)->getName();
         }
 
-        $driver = $this->doctrineHelper->getMappingDriverForClass($className);
-
-        return $driver instanceof AnnotationDriver;
+        return $this->doctrineHelper->isClassAnnotated($className);
     }
 
     private function getEntityNamespace(): string

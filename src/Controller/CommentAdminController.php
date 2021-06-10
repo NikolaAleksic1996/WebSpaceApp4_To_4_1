@@ -4,10 +4,14 @@ namespace App\Controller;
 
 use App\Repository\CommentRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+/**
+ * @IsGranted("ROLE_USER")
+ */
 class CommentAdminController extends Controller
 {
     /**
@@ -15,6 +19,16 @@ class CommentAdminController extends Controller
      */
     public function index(CommentRepository $repository, Request $request, PaginatorInterface $paginator)
     {
+        /*
+         *  - { path: ^/admin, roles: ROLE_ADMIN }
+         * umesto u security da podesim access deny ja cu ovde u controller
+         * ovako bez anotations
+         *  $this->denyAccessUnlessGranted('ROLE_USER');
+         * a inace sa anotacijom moram iznad cele klase da da stavim @IsGranted...ali opet ne moze!!!!
+         * */
+
+
+
         $q = $request->query->get('q');
 
         $queryBuilder = $repository->getWithSearchQueryBuilder($q);

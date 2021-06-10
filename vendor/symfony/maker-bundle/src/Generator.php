@@ -11,8 +11,10 @@
 
 namespace Symfony\Bundle\MakerBundle;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\MakerBundle\Exception\RuntimeCommandException;
 use Symfony\Bundle\MakerBundle\Util\ClassNameDetails;
+use Symfony\Bundle\MakerBundle\Util\PhpCompatUtil;
 
 /**
  * @author Javier Eguiluz <javier.eguiluz@gmail.com>
@@ -24,18 +26,35 @@ class Generator
     private $twigHelper;
     private $pendingOperations = [];
     private $namespacePrefix;
+    private $phpCompatUtil;
 
-    public function __construct(FileManager $fileManager, string $namespacePrefix)
+    public function __construct(FileManager $fileManager, string $namespacePrefix, PhpCompatUtil $phpCompatUtil = null)
     {
         $this->fileManager = $fileManager;
         $this->twigHelper = new GeneratorTwigHelper($fileManager);
         $this->namespacePrefix = trim($namespacePrefix, '\\');
+
+        if (null === $phpCompatUtil) {
+            $phpCompatUtil = new PhpCompatUtil($fileManager);
+
+            trigger_deprecation('symfony/maker-bundle', '1.25', 'Initializing Generator without providing an instance of PhpCompatUtil is deprecated.');
+        }
+
+        $this->phpCompatUtil = $phpCompatUtil;
     }
 
     /**
      * Generate a new file for a class from a template.
+     *
+     * @param string $className    The fully-qualified class name
+     * @param string $templateName Template name in Resources/skeleton to use
+     * @param array  $variables    Array of variables to pass to the template
+     *
+     * @return string The path where the file will be created
+     *
+     * @throws \Exception
      */
-    public function generateClass(string $className, string $templateName, array $variables): string
+    public function generateClass(string $className, string $templateName, array $variables = []): string
     {
         $targetPath = $this->fileManager->getRelativePathForFutureClass($className);
 
@@ -55,18 +74,37 @@ class Generator
 
     /**
      * Generate a normal file from a template.
-     *
-     * @param string $targetPath
-     * @param string $templateName
-     * @param array  $variables
      */
-    public function generateFile(string $targetPath, string $templateName, array $variables)
+    public function generateFile(string $targetPath, string $templateName, array $variables = [])
     {
         $variables = array_merge($variables, [
             'helper' => $this->twigHelper,
         ]);
 
         $this->addOperation($targetPath, $templateName, $variables);
+    }
+
+    public function dumpFile(string $targetPath, string $contents)
+    {
+        $this->pendingOperations[$targetPath] = [
+            'contents' => $contents,
+        ];
+    }
+
+    public function getFileContentsForPendingOperation(string $targetPath): string
+    {
+        if (!isset($this->pendingOperations[$targetPath])) {
+            throw new RuntimeCommandException(sprintf('File "%s" is not in the Generator\'s pending operations', $targetPath));
+        }
+
+        $templatePath = $this->pendingOperations[$targetPath]['template'];
+        $parameters = $this->pendingOperations[$targetPath]['variables'];
+
+        $templateParameters = array_merge($parameters, [
+            'relative_path' => $this->fileManager->relativizePath($targetPath),
+        ]);
+
+        return $this->fileManager->parseTemplate($templatePath, $templateParameters);
     }
 
     /**
@@ -92,12 +130,9 @@ class Generator
      *      // Cool\Stuff\BalloonController
      *      $gen->createClassNameDetails('Cool\\Stuff\\Balloon', 'Controller', 'Controller');
      *
-     * @param string $name                   The short "name" that will be turned into the class name
-     * @param string $namespacePrefix        Recommended namespace where this class should live, but *without* the "App\\" part
-     * @param string $suffix                 Optional suffix to guarantee is on the end of the class
-     * @param string $validationErrorMessage
-     *
-     * @return ClassNameDetails
+     * @param string $name            The short "name" that will be turned into the class name
+     * @param string $namespacePrefix Recommended namespace where this class should live, but *without* the "App\\" part
+     * @param string $suffix          Optional suffix to guarantee is on the end of the class
      */
     public function createClassNameDetails(string $name, string $namespacePrefix, string $suffix = '', string $validationErrorMessage = ''): ClassNameDetails
     {
@@ -120,16 +155,20 @@ class Generator
         return new ClassNameDetails($className, $fullNamespacePrefix, $suffix);
     }
 
+    public function getRootDirectory(): string
+    {
+        return $this->fileManager->getRootDirectory();
+    }
+
     private function addOperation(string $targetPath, string $templateName, array $variables)
     {
         if ($this->fileManager->fileExists($targetPath)) {
-            throw new RuntimeCommandException(sprintf(
-                'The file "%s" can\'t be generated because it already exists.',
-                $this->fileManager->relativizePath($targetPath)
-            ));
+            throw new RuntimeCommandException(sprintf('The file "%s" can\'t be generated because it already exists.', $this->fileManager->relativizePath($targetPath)));
         }
 
         $variables['relative_path'] = $this->fileManager->relativizePath($targetPath);
+        $variables['use_attributes'] = $this->phpCompatUtil->canUseAttributes();
+        $variables['use_typed_properties'] = $this->phpCompatUtil->canUseTypedProperties();
 
         $templatePath = $templateName;
         if (!file_exists($templatePath)) {
@@ -157,15 +196,16 @@ class Generator
     public function writeChanges()
     {
         foreach ($this->pendingOperations as $targetPath => $templateData) {
-            $templatePath = $templateData['template'];
-            $parameters = $templateData['variables'];
+            if (isset($templateData['contents'])) {
+                $this->fileManager->dumpFile($targetPath, $templateData['contents']);
 
-            $templateParameters = array_merge($parameters, [
-                'relative_path' => $this->fileManager->relativizePath($targetPath),
-            ]);
+                continue;
+            }
 
-            $fileContents = $this->fileManager->parseTemplate($templatePath, $templateParameters);
-            $this->fileManager->dumpFile($targetPath, $fileContents);
+            $this->fileManager->dumpFile(
+                $targetPath,
+                $this->getFileContentsForPendingOperation($targetPath, $templateData)
+            );
         }
 
         $this->pendingOperations = [];
@@ -174,5 +214,29 @@ class Generator
     public function getRootNamespace(): string
     {
         return $this->namespacePrefix;
+    }
+
+    public function generateController(string $controllerClassName, string $controllerTemplatePath, array $parameters = []): string
+    {
+        return $this->generateClass(
+            $controllerClassName,
+            $controllerTemplatePath,
+            $parameters +
+            [
+                'parent_class_name' => method_exists(AbstractController::class, 'getParameter') ? 'AbstractController' : 'Controller',
+            ]
+        );
+    }
+
+    /**
+     * Generate a template file.
+     */
+    public function generateTemplate(string $targetPath, string $templateName, array $variables = [])
+    {
+        $this->generateFile(
+            $this->fileManager->getPathForTemplate($targetPath),
+            $templateName,
+            $variables
+        );
     }
 }

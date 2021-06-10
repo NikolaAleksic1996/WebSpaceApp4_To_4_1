@@ -19,7 +19,10 @@ abstract class BaseRelation
     private $propertyName;
     private $targetClassName;
     private $targetPropertyName;
+    private $customReturnType;
+    private $isSelfReferencing = false;
     private $mapInverseRelation = true;
+    private $avoidSetter = false;
 
     abstract public function isOwning(): bool;
 
@@ -59,6 +62,18 @@ abstract class BaseRelation
         return $this;
     }
 
+    public function isSelfReferencing(): bool
+    {
+        return $this->isSelfReferencing;
+    }
+
+    public function setIsSelfReferencing(bool $isSelfReferencing)
+    {
+        $this->isSelfReferencing = $isSelfReferencing;
+
+        return $this;
+    }
+
     public function getMapInverseRelation(): bool
     {
         return $this->mapInverseRelation;
@@ -67,6 +82,36 @@ abstract class BaseRelation
     public function setMapInverseRelation(bool $mapInverseRelation)
     {
         $this->mapInverseRelation = $mapInverseRelation;
+
+        return $this;
+    }
+
+    public function shouldAvoidSetter(): bool
+    {
+        return $this->avoidSetter;
+    }
+
+    public function avoidSetter(bool $avoidSetter = true)
+    {
+        $this->avoidSetter = $avoidSetter;
+
+        return $this;
+    }
+
+    public function getCustomReturnType(): ?string
+    {
+        return $this->customReturnType;
+    }
+
+    public function isCustomReturnTypeNullable(): bool
+    {
+        return $this->isCustomReturnTypeNullable;
+    }
+
+    public function setCustomReturnType(string $customReturnType, bool $isNullable)
+    {
+        $this->customReturnType = $customReturnType;
+        $this->isCustomReturnTypeNullable = $isNullable;
 
         return $this;
     }

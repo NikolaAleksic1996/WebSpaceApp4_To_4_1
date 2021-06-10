@@ -33,9 +33,7 @@ class AutoloaderUtil
     /**
      * Returns the relative path to where a new class should live.
      *
-     * @param string $className
-     *
-     * @return null|string
+     * @return string|null
      *
      * @throws \Exception
      */
@@ -46,7 +44,7 @@ class AutoloaderUtil
         // lookup is obviously modeled off of Composer's autoload logic
         foreach ($classLoader->getPrefixesPsr4() as $prefix => $paths) {
             if (0 === strpos($className, $prefix)) {
-                return $paths[0].'/'.str_replace('\\', '/', str_replace($prefix, '', $className)).'.php';
+                return $paths[0].'/'.str_replace('\\', '/', substr($className, \strlen($prefix))).'.php';
             }
         }
 

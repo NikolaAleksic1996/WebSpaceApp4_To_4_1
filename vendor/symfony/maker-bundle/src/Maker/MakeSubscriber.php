@@ -41,10 +41,14 @@ final class MakeSubscriber extends AbstractMaker
         return 'make:subscriber';
     }
 
+    public static function getCommandDescription(): string
+    {
+        return 'Creates a new event subscriber class';
+    }
+
     public function configureCommand(Command $command, InputConfiguration $inputConf)
     {
         $command
-            ->setDescription('Creates a new event subscriber class')
             ->addArgument('name', InputArgument::OPTIONAL, 'Choose a class name for your event subscriber (e.g. <fg=yellow>ExceptionSubscriber</>)')
             ->addArgument('event', InputArgument::OPTIONAL, 'What event do you want to subscribe to?')
             ->setHelp(file_get_contents(__DIR__.'/../Resources/help/MakeSubscriber.txt'))
@@ -59,7 +63,7 @@ final class MakeSubscriber extends AbstractMaker
             $events = $this->eventRegistry->getAllActiveEvents();
 
             $io->writeln(' <fg=green>Suggested Events:</>');
-            $io->listing($events);
+            $io->listing($this->eventRegistry->listActiveEvents($events));
             $question = new Question(sprintf(' <fg=green>%s</>', $command->getDefinition()->getArgument('event')->getDescription()));
             $question->setAutocompleterValues($events);
             $question->setValidator([Validator::class, 'notBlank']);
@@ -84,10 +88,10 @@ final class MakeSubscriber extends AbstractMaker
             $subscriberClassNameDetails->getFullName(),
             'event/Subscriber.tpl.php',
             [
-                'event' => $event,
+                'event' => class_exists($event) ? sprintf('%s::class', $eventClassName) : sprintf('\'%s\'', $event),
                 'event_full_class_name' => $eventFullClassName,
                 'event_arg' => $eventClassName ? sprintf('%s $event', $eventClassName) : '$event',
-                'method_name' => Str::asEventMethod($event),
+                'method_name' => class_exists($event) ? Str::asEventMethod($eventClassName) : Str::asEventMethod($event),
             ]
         );
 

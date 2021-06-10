@@ -11,17 +11,23 @@
 
 namespace Symfony\Bundle\MakerBundle\Maker;
 
+use Symfony\Bundle\FrameworkBundle\Test\WebTestAssertionsTrait;
 use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Bundle\MakerBundle\DependencyBuilder;
 use Symfony\Bundle\MakerBundle\Generator;
 use Symfony\Bundle\MakerBundle\InputConfiguration;
-use Symfony\Component\BrowserKit\Client;
+use Symfony\Component\BrowserKit\History;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\CssSelector\CssSelectorConverter;
+use Symfony\Component\Panther\PantherTestCaseTrait;
+
+trigger_deprecation('symfony/maker-bundle', '1.29', 'The "%s" class is deprecated, use "%s" instead.', MakeFunctionalTest::class, MakeTest::class);
 
 /**
+ * @deprecated since MakerBundle 1.29, use Symfony\Bundle\MakerBundle\Maker\MakeTest instead.
+ *
  * @author Javier Eguiluz <javier.eguiluz@gmail.com>
  * @author Ryan Weaver <weaverryan@gmail.com>
  */
@@ -32,10 +38,14 @@ class MakeFunctionalTest extends AbstractMaker
         return 'make:functional-test';
     }
 
+    public static function getCommandDescription(): string
+    {
+        return 'Creates a new functional test class';
+    }
+
     public function configureCommand(Command $command, InputConfiguration $inputConf)
     {
         $command
-            ->setDescription('Creates a new functional test class')
             ->addArgument('name', InputArgument::OPTIONAL, 'The name of the functional test class (e.g. <fg=yellow>DefaultControllerTest</>)')
             ->setHelp(file_get_contents(__DIR__.'/../Resources/help/MakeFunctionalTest.txt'))
         ;
@@ -52,7 +62,10 @@ class MakeFunctionalTest extends AbstractMaker
         $generator->generateClass(
             $testClassNameDetails->getFullName(),
             'test/Functional.tpl.php',
-            []
+            [
+                'web_assertions_are_available' => trait_exists(WebTestAssertionsTrait::class),
+                'panther_is_available' => trait_exists(PantherTestCaseTrait::class),
+            ]
         );
 
         $generator->writeChanges();
@@ -68,7 +81,7 @@ class MakeFunctionalTest extends AbstractMaker
     public function configureDependencies(DependencyBuilder $dependencies)
     {
         $dependencies->addClassDependency(
-            Client::class,
+            History::class,
             'browser-kit',
             true,
             true

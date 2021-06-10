@@ -64,9 +64,12 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
         switch ($pathinfo) {
             default:
                 $routes = array(
-                    '/admin/article/new' => array(array('_route' => 'app_articleadmin_new', '_controller' => 'App\\Controller\\ArticleAdminController::new'), null, null, null),
+                    '/account' => array(array('_route' => 'app_account', '_controller' => 'App\\Controller\\AccountController::index'), null, null, null),
+                    '/admin/article/new' => array(array('_route' => 'admi_article_new', '_controller' => 'App\\Controller\\ArticleAdminController::new'), null, null, null),
                     '/' => array(array('_route' => 'app_homepage', '_controller' => 'App\\Controller\\ArticleController::homepage'), null, null, null),
                     '/admin/comment' => array(array('_route' => 'comment_admin', '_controller' => 'App\\Controller\\CommentAdminController::index'), null, null, null),
+                    '/login' => array(array('_route' => 'app_login', '_controller' => 'App\\Controller\\SecurityController::login'), null, null, null),
+                    '/logout' => array(array('_route' => 'app_logout', '_controller' => 'App\\Controller\\SecurityController::logout'), null, null, null),
                     '/_profiler/' => array(array('_route' => '_profiler_home', '_controller' => 'web_profiler.controller.profiler::homeAction'), null, null, null),
                     '/_profiler/search' => array(array('_route' => '_profiler_search', '_controller' => 'web_profiler.controller.profiler::searchAction'), null, null, null),
                     '/_profiler/search_bar' => array(array('_route' => '_profiler_search_bar', '_controller' => 'web_profiler.controller.profiler::searchBarAction'), null, null, null),

@@ -20,11 +20,14 @@ class srcDevDebugProjectContainerUrlGenerator extends Symfony\Component\Routing\
         $this->defaultLocale = $defaultLocale;
         if (null === self::$declaredRoutes) {
             self::$declaredRoutes = array(
-        'app_articleadmin_new' => array(array(), array('_controller' => 'App\\Controller\\ArticleAdminController::new'), array(), array(array('text', '/admin/article/new')), array(), array()),
+        'app_account' => array(array(), array('_controller' => 'App\\Controller\\AccountController::index'), array(), array(array('text', '/account')), array(), array()),
+        'admi_article_new' => array(array(), array('_controller' => 'App\\Controller\\ArticleAdminController::new'), array(), array(array('text', '/admin/article/new')), array(), array()),
         'app_homepage' => array(array(), array('_controller' => 'App\\Controller\\ArticleController::homepage'), array(), array(array('text', '/')), array(), array()),
         'article_show' => array(array('slug'), array('_controller' => 'App\\Controller\\ArticleController::show'), array(), array(array('variable', '/', '[^/]++', 'slug'), array('text', '/news')), array(), array()),
         'article_toggle_heart' => array(array('slug'), array('_controller' => 'App\\Controller\\ArticleController::toggleArticleHeart'), array(), array(array('text', '/heart'), array('variable', '/', '[^/]++', 'slug'), array('text', '/news')), array(), array()),
         'comment_admin' => array(array(), array('_controller' => 'App\\Controller\\CommentAdminController::index'), array(), array(array('text', '/admin/comment')), array(), array()),
+        'app_login' => array(array(), array('_controller' => 'App\\Controller\\SecurityController::login'), array(), array(array('text', '/login')), array(), array()),
+        'app_logout' => array(array(), array('_controller' => 'App\\Controller\\SecurityController::logout'), array(), array(array('text', '/logout')), array(), array()),
         '_twig_error_test' => array(array('code', '_format'), array('_controller' => 'twig.controller.preview_error::previewErrorPageAction', '_format' => 'html'), array('code' => '\\d+'), array(array('variable', '.', '[^/]++', '_format'), array('variable', '/', '\\d+', 'code'), array('text', '/_error')), array(), array()),
         '_wdt' => array(array('token'), array('_controller' => 'web_profiler.controller.profiler::toolbarAction'), array(), array(array('variable', '/', '[^/]++', 'token'), array('text', '/_wdt')), array(), array()),
         '_profiler_home' => array(array(), array('_controller' => 'web_profiler.controller.profiler::homeAction'), array(), array(array('text', '/_profiler/')), array(), array()),

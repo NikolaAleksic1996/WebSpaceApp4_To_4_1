@@ -17,7 +17,9 @@ use Symfony\Bundle\MakerBundle\DependencyBuilder;
 use Symfony\Bundle\MakerBundle\Doctrine\DoctrineHelper;
 use Symfony\Bundle\MakerBundle\Generator;
 use Symfony\Bundle\MakerBundle\InputConfiguration;
+use Symfony\Bundle\MakerBundle\Renderer\FormTypeRenderer;
 use Symfony\Bundle\MakerBundle\Str;
+use Symfony\Bundle\MakerBundle\Util\ClassDetails;
 use Symfony\Bundle\MakerBundle\Validator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -33,10 +35,12 @@ use Symfony\Component\Validator\Validation;
 final class MakeForm extends AbstractMaker
 {
     private $entityHelper;
+    private $formTypeRenderer;
 
-    public function __construct(DoctrineHelper $entityHelper)
+    public function __construct(DoctrineHelper $entityHelper, FormTypeRenderer $formTypeRenderer)
     {
         $this->entityHelper = $entityHelper;
+        $this->formTypeRenderer = $formTypeRenderer;
     }
 
     public static function getCommandName(): string
@@ -44,10 +48,14 @@ final class MakeForm extends AbstractMaker
         return 'make:form';
     }
 
+    public static function getCommandDescription(): string
+    {
+        return 'Creates a new form class';
+    }
+
     public function configureCommand(Command $command, InputConfiguration $inputConf)
     {
         $command
-            ->setDescription('Creates a new form class')
             ->addArgument('name', InputArgument::OPTIONAL, sprintf('The name of the form class (e.g. <fg=yellow>%sType</>)', Str::asClassName(Str::getRandomTerm())))
             ->addArgument('bound-class', InputArgument::OPTIONAL, 'The name of Entity or fully qualified model class name that the new form will be bound to (empty for none)')
             ->setHelp(file_get_contents(__DIR__.'/../Resources/help/MakeForm.txt'))
@@ -80,10 +88,10 @@ final class MakeForm extends AbstractMaker
             'Type'
         );
 
-        $formFields = ['field_name'];
-        $boundClassVars = [];
+        $formFields = ['field_name' => null];
 
         $boundClass = $input->getArgument('bound-class');
+        $boundClassDetails = null;
 
         if (null !== $boundClass) {
             $boundClassDetails = $generator->createClassNameDetails(
@@ -95,18 +103,16 @@ final class MakeForm extends AbstractMaker
 
             if (null !== $doctrineEntityDetails) {
                 $formFields = $doctrineEntityDetails->getFormFields();
+            } else {
+                $classDetails = new ClassDetails($boundClassDetails->getFullName());
+                $formFields = $classDetails->getFormFields();
             }
-
-            $boundClassVars = [
-                'bounded_full_class_name' => $boundClassDetails->getFullName(),
-                'bounded_class_name' => $boundClassDetails->getShortName(),
-            ];
         }
 
-        $generator->generateClass(
-            $formClassNameDetails->getFullName(),
-            'form/Type.tpl.php',
-            array_merge(['form_fields' => $formFields], $boundClassVars)
+        $this->formTypeRenderer->render(
+            $formClassNameDetails,
+            $formFields,
+            $boundClassDetails
         );
 
         $generator->writeChanges();

@@ -11,7 +11,8 @@
 
 namespace Symfony\Bundle\MakerBundle\Doctrine;
 
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
+use Doctrine\Common\Persistence\Mapping\ClassMetadata as LegacyClassMetadata;
+use Doctrine\Persistence\Mapping\ClassMetadata;
 
 /**
  * @author Sadicov Vladimir <sadikoff@gmail.com>
@@ -23,9 +24,9 @@ final class EntityDetails
     private $metadata;
 
     /**
-     * @param ClassMetadata|\Doctrine\ORM\Mapping\ClassMetadata $metadata
+     * @param ClassMetadata|LegacyClassMetadata $metadata
      */
-    public function __construct(ClassMetadata $metadata)
+    public function __construct($metadata)
     {
         $this->metadata = $metadata;
     }
@@ -68,6 +69,11 @@ final class EntityDetails
             }
         }
 
-        return $fields;
+        $fieldsWithTypes = [];
+        foreach ($fields as $field) {
+            $fieldsWithTypes[$field] = null;
+        }
+
+        return $fieldsWithTypes;
     }
 }
