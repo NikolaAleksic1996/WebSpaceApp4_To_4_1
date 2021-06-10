@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ArticleAdminController extends AbstractController
 {
     /**
-     * @Route("/admin/article/new", name="admi_article_new")
+     * @Route("/admin/article/new", name="admin_article_new")
      */
     public function new(EntityManagerInterface $em)
     {

@@ -65,7 +65,8 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
             default:
                 $routes = array(
                     '/account' => array(array('_route' => 'app_account', '_controller' => 'App\\Controller\\AccountController::index'), null, null, null),
-                    '/admin/article/new' => array(array('_route' => 'admi_article_new', '_controller' => 'App\\Controller\\ArticleAdminController::new'), null, null, null),
+                    '/api/account' => array(array('_route' => 'api_account', '_controller' => 'App\\Controller\\AccountController::accountApi'), null, null, null),
+                    '/admin/article/new' => array(array('_route' => 'admin_article_new', '_controller' => 'App\\Controller\\ArticleAdminController::new'), null, null, null),
                     '/' => array(array('_route' => 'app_homepage', '_controller' => 'App\\Controller\\ArticleController::homepage'), null, null, null),
                     '/admin/comment' => array(array('_route' => 'comment_admin', '_controller' => 'App\\Controller\\CommentAdminController::index'), null, null, null),
                     '/login' => array(array('_route' => 'app_login', '_controller' => 'App\\Controller\\SecurityController::login'), null, null, null),

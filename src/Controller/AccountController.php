@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**ovde su
+/**
  * @IsGranted("ROLE_USER")
  */
 //we don`t inherit apstractController but baseController
@@ -28,12 +28,23 @@ class AccountController extends BaseController
      */
     public function index(LoggerInterface $logger): Response
     {
-        //sada  ovako pribavljamo user object u kontroleru a kako sada u temlatu
-        //index.html.twig pa samo sa app.user.firstname npr
+        //to get user in controller
         $logger->debug('Checking account page for '.$this->getUser()->getEmail());//ne izlazi mi autocomplite za getEmail jer getUser ne zna za usera zato kreiramo baseController
 
         return $this->render('account/index.html.twig', [
 
+        ]);
+    }
+
+    /**
+     * @Route("/api/account", name="api_account")
+     */
+    public function accountApi()
+    {
+        $user = $this->getUser();
+        //takes json all the attribute that is in this group main
+        return $this->json($user, 200, [], [
+            'groups' => ['main'],
         ]);
     }
 }

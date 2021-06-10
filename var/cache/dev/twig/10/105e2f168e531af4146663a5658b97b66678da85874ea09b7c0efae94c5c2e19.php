@@ -60,9 +60,23 @@ class __TwigTemplate_bd9a870ea9d9b770ae8fbd68cd7493ffbdcff0a820fea7ad7a098666cf8
         echo "    </head>
 
     <body>
-        <nav class=\"navbar navbar-expand-lg navbar-dark navbar-bg mb-5\">
+        ";
+        // line 17
+        if ($this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_PREVIOUS_ADMIN")) {
+            // line 18
+            echo "            <div class=\"alert alert-warning\" style=\"margin-bottom: 0;\">
+                You are currently switched to this user.
+                <a href=\"";
+            // line 20
+            echo $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_homepage", ["_switch_user" => "_exit"]);
+            echo "\">Exit Impersonation</a>
+            </div>
+        ";
+        }
+        // line 23
+        echo "        <nav class=\"navbar navbar-expand-lg navbar-dark navbar-bg mb-5\">
             <a style=\"margin-left: 75px;\" class=\"navbar-brand space-brand\" href=\"";
-        // line 18
+        // line 24
         echo $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_homepage");
         echo "\">The Space Bar</a>
             <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarNavDropdown\" aria-controls=\"navbarNavDropdown\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">
@@ -83,32 +97,32 @@ class __TwigTemplate_bd9a870ea9d9b770ae8fbd68cd7493ffbdcff0a820fea7ad7a098666cf8
                 </form>
                 <ul class=\"navbar-nav ml-auto\">
                     ";
-        // line 36
+        // line 42
         if ($this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_USER")) {
-            // line 37
+            // line 43
             echo "                        <li class=\"nav-item dropdown\" style=\"margin-right: 75px;\">
                             <a class=\"nav-link dropdown-toggle\" href=\"http://example.com\" id=\"navbarDropdownMenuLink\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">
                                 <img class=\"nav-profile-img rounded-circle\" src=\"";
-            // line 39
-            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 39, $this->source); })()), "user", [], "any", false, false, false, 39), "avatarUrl", [], "any", false, false, false, 39), "html", null, true);
+            // line 45
+            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 45, $this->source); })()), "user", [], "any", false, false, false, 45), "avatarUrl", [0 => 100], "method", false, false, false, 45), "html", null, true);
             echo "\">";
-            // line 40
+            // line 46
             echo "                            </a>
                             <div class=\"dropdown-menu\" aria-labelledby=\"navbarDropdownMenuLink\">
                                 <a class=\"dropdown-item\" href=\"";
-            // line 42
+            // line 48
             echo $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_account");
             echo "\">Profile</a>
                                 ";
-            // line 43
-            if ($this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_ADMIN")) {
-                // line 44
+            // line 49
+            if ($this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_ADMIN_ARTICLE")) {
+                // line 50
                 echo "                                    <a class=\"dropdown-item\" href=\"";
-                echo $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("admi_article_new");
+                echo $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("admin_article_new");
                 echo "\">Create Post</a>
                                 ";
             }
-            // line 46
+            // line 52
             echo "                                <a class=\"dropdown-item\" href=\"";
             echo $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_logout");
             echo "\">Logout</a>
@@ -116,24 +130,24 @@ class __TwigTemplate_bd9a870ea9d9b770ae8fbd68cd7493ffbdcff0a820fea7ad7a098666cf8
                         </li>
                     ";
         } else {
-            // line 50
+            // line 56
             echo "                        <li class=\"nav-item\">
                             <a style=\"color: #fff;\" class=\"nav-link\" href=\"";
-            // line 51
+            // line 57
             echo $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_login");
             echo "\">Login</a>
                         </li>
                     ";
         }
-        // line 54
+        // line 60
         echo "                </ul>
             </div>
         </nav>
 
         ";
-        // line 58
+        // line 64
         $this->displayBlock('body', $context, $blocks);
-        // line 59
+        // line 65
         echo "
         <footer class=\"footer\">
             <div class=\"container text-center\">
@@ -143,9 +157,9 @@ class __TwigTemplate_bd9a870ea9d9b770ae8fbd68cd7493ffbdcff0a820fea7ad7a098666cf8
 
 
         ";
-        // line 67
+        // line 73
         $this->displayBlock('javascripts', $context, $blocks);
-        // line 75
+        // line 81
         echo "    </body>
 </html>
 ";
@@ -203,7 +217,7 @@ class __TwigTemplate_bd9a870ea9d9b770ae8fbd68cd7493ffbdcff0a820fea7ad7a098666cf8
 
     }
 
-    // line 58
+    // line 64
     public function block_body($context, array $blocks = [])
     {
         $__internal_085b0142806202599c7fe3b329164a92397d8978207a37e79d70b8c52599e33e = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
@@ -220,7 +234,7 @@ class __TwigTemplate_bd9a870ea9d9b770ae8fbd68cd7493ffbdcff0a820fea7ad7a098666cf8
 
     }
 
-    // line 67
+    // line 73
     public function block_javascripts($context, array $blocks = [])
     {
         $__internal_085b0142806202599c7fe3b329164a92397d8978207a37e79d70b8c52599e33e = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
@@ -229,7 +243,7 @@ class __TwigTemplate_bd9a870ea9d9b770ae8fbd68cd7493ffbdcff0a820fea7ad7a098666cf8
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02 = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02->enter($__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 68
+        // line 74
         echo "            <script src=\"https://code.jquery.com/jquery-3.2.1.min.js\" integrity=\"sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=\" crossorigin=\"anonymous\"></script>
             <script src=\"https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js\" integrity=\"sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh\" crossorigin=\"anonymous\"></script>
             <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js\" integrity=\"sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ\" crossorigin=\"anonymous\"></script>
@@ -257,7 +271,7 @@ class __TwigTemplate_bd9a870ea9d9b770ae8fbd68cd7493ffbdcff0a820fea7ad7a098666cf8
 
     public function getDebugInfo()
     {
-        return array (  233 => 68,  224 => 67,  207 => 58,  195 => 12,  191 => 11,  188 => 10,  179 => 9,  161 => 5,  149 => 75,  147 => 67,  137 => 59,  135 => 58,  129 => 54,  123 => 51,  120 => 50,  112 => 46,  106 => 44,  104 => 43,  100 => 42,  96 => 40,  93 => 39,  89 => 37,  87 => 36,  66 => 18,  60 => 14,  58 => 9,  51 => 5,  45 => 1,);
+        return array (  247 => 74,  238 => 73,  221 => 64,  209 => 12,  205 => 11,  202 => 10,  193 => 9,  175 => 5,  163 => 81,  161 => 73,  151 => 65,  149 => 64,  143 => 60,  137 => 57,  134 => 56,  126 => 52,  120 => 50,  118 => 49,  114 => 48,  110 => 46,  107 => 45,  103 => 43,  101 => 42,  80 => 24,  77 => 23,  71 => 20,  67 => 18,  65 => 17,  60 => 14,  58 => 9,  51 => 5,  45 => 1,);
     }
 
     public function getSourceContext()
@@ -278,6 +292,12 @@ class __TwigTemplate_bd9a870ea9d9b770ae8fbd68cd7493ffbdcff0a820fea7ad7a098666cf8
     </head>
 
     <body>
+        {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
+            <div class=\"alert alert-warning\" style=\"margin-bottom: 0;\">
+                You are currently switched to this user.
+                <a href=\"{{ path('app_homepage', {'_switch_user': '_exit'}) }}\">Exit Impersonation</a>
+            </div>
+        {% endif %}
         <nav class=\"navbar navbar-expand-lg navbar-dark navbar-bg mb-5\">
             <a style=\"margin-left: 75px;\" class=\"navbar-brand space-brand\" href=\"{{ path('app_homepage') }}\">The Space Bar</a>
             <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarNavDropdown\" aria-controls=\"navbarNavDropdown\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">
@@ -300,12 +320,12 @@ class __TwigTemplate_bd9a870ea9d9b770ae8fbd68cd7493ffbdcff0a820fea7ad7a098666cf8
                     {% if is_granted('ROLE_USER') %}
                         <li class=\"nav-item dropdown\" style=\"margin-right: 75px;\">
                             <a class=\"nav-link dropdown-toggle\" href=\"http://example.com\" id=\"navbarDropdownMenuLink\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">
-                                <img class=\"nav-profile-img rounded-circle\" src=\"{{ app.user.avatarUrl }}\">{# we reduce the icon to 100px #}
+                                <img class=\"nav-profile-img rounded-circle\" src=\"{{ app.user.avatarUrl(100) }}\">{# we reduce the icon to 100px #}
                             </a>
                             <div class=\"dropdown-menu\" aria-labelledby=\"navbarDropdownMenuLink\">
                                 <a class=\"dropdown-item\" href=\"{{ path('app_account') }}\">Profile</a>
-                                {% if is_granted('ROLE_ADMIN') %}
-                                    <a class=\"dropdown-item\" href=\"{{ path('admi_article_new') }}\">Create Post</a>
+                                {% if is_granted('ROLE_ADMIN_ARTICLE') %}
+                                    <a class=\"dropdown-item\" href=\"{{ path('admin_article_new') }}\">Create Post</a>
                                 {% endif %}
                                 <a class=\"dropdown-item\" href=\"{{ path('app_logout') }}\">Logout</a>
                             </div>

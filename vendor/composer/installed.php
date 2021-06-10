@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '8c20203161e2d536bd358dd8c4775989b3d04130',
+    'reference' => 'c312c2a21dd7fb601754f3f9a6704c1e74dc3f44',
     'name' => '__root__',
   ),
   'versions' => 
@@ -18,7 +18,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '8c20203161e2d536bd358dd8c4775989b3d04130',
+      'reference' => 'c312c2a21dd7fb601754f3f9a6704c1e74dc3f44',
     ),
     'behat/transliterator' => 
     array (
@@ -489,6 +489,33 @@
       ),
       'reference' => 'b9d4ab7a0f4ca1fc17e323e880d1235076e31dbf',
     ),
+    'phpdocumentor/reflection-common' => 
+    array (
+      'pretty_version' => '2.2.0',
+      'version' => '2.2.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '1d01c49d4ed62f25aa84a747ad35d5a16924662b',
+    ),
+    'phpdocumentor/reflection-docblock' => 
+    array (
+      'pretty_version' => '5.2.2',
+      'version' => '5.2.2.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '069a785b2141f5bcf49f3e353548dc1cce6df556',
+    ),
+    'phpdocumentor/type-resolver' => 
+    array (
+      'pretty_version' => '1.4.0',
+      'version' => '1.4.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '6a467b8989322d92aa1c8bf2bebcc6e5c2ba55c0',
+    ),
     'psr/cache' => 
     array (
       'pretty_version' => '1.0.1',
@@ -905,6 +932,15 @@
       ),
       'reference' => '3af7c21b4128eadbace0800b51054a81bff896c6',
     ),
+    'symfony/property-info' => 
+    array (
+      'pretty_version' => 'v4.4.25',
+      'version' => '4.4.25.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '18f7a0e58c9196c255ca8272f2c0de0b2bd563c6',
+    ),
     'symfony/routing' => 
     array (
       'pretty_version' => 'v4.1.4',
@@ -959,6 +995,15 @@
       array (
         0 => 'v4.2.12',
       ),
+    ),
+    'symfony/serializer' => 
+    array (
+      'pretty_version' => 'v4.4.25',
+      'version' => '4.4.25.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '6db3eb4f1bb437cd3730f52353ba4b568acaddf5',
     ),
     'symfony/stopwatch' => 
     array (
@@ -1058,6 +1103,15 @@
       array (
       ),
       'reference' => '5240e21982885b76629552d83b4ebb6d41ccde6b',
+    ),
+    'webmozart/assert' => 
+    array (
+      'pretty_version' => '1.10.0',
+      'version' => '1.10.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '6964c76c7804814a842473e0c8fd15bab0f18e25',
     ),
     'zendframework/zend-code' => 
     array (
