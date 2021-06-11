@@ -137,17 +137,23 @@ class __TwigTemplate_bd9a870ea9d9b770ae8fbd68cd7493ffbdcff0a820fea7ad7a098666cf8
             echo $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_login");
             echo "\">Login</a>
                         </li>
+                        <li class=\"nav-item\">
+                            <a style=\"color: #fff;\" class=\"nav-link\" href=\"";
+            // line 60
+            echo $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_register");
+            echo "\">Register</a>
+                        </li>
                     ";
         }
-        // line 60
+        // line 63
         echo "                </ul>
             </div>
         </nav>
 
         ";
-        // line 64
+        // line 67
         $this->displayBlock('body', $context, $blocks);
-        // line 65
+        // line 68
         echo "
         <footer class=\"footer\">
             <div class=\"container text-center\">
@@ -157,9 +163,9 @@ class __TwigTemplate_bd9a870ea9d9b770ae8fbd68cd7493ffbdcff0a820fea7ad7a098666cf8
 
 
         ";
-        // line 73
+        // line 76
         $this->displayBlock('javascripts', $context, $blocks);
-        // line 81
+        // line 84
         echo "    </body>
 </html>
 ";
@@ -217,7 +223,7 @@ class __TwigTemplate_bd9a870ea9d9b770ae8fbd68cd7493ffbdcff0a820fea7ad7a098666cf8
 
     }
 
-    // line 64
+    // line 67
     public function block_body($context, array $blocks = [])
     {
         $__internal_085b0142806202599c7fe3b329164a92397d8978207a37e79d70b8c52599e33e = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
@@ -234,7 +240,7 @@ class __TwigTemplate_bd9a870ea9d9b770ae8fbd68cd7493ffbdcff0a820fea7ad7a098666cf8
 
     }
 
-    // line 73
+    // line 76
     public function block_javascripts($context, array $blocks = [])
     {
         $__internal_085b0142806202599c7fe3b329164a92397d8978207a37e79d70b8c52599e33e = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
@@ -243,7 +249,7 @@ class __TwigTemplate_bd9a870ea9d9b770ae8fbd68cd7493ffbdcff0a820fea7ad7a098666cf8
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02 = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02->enter($__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 74
+        // line 77
         echo "            <script src=\"https://code.jquery.com/jquery-3.2.1.min.js\" integrity=\"sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=\" crossorigin=\"anonymous\"></script>
             <script src=\"https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js\" integrity=\"sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh\" crossorigin=\"anonymous\"></script>
             <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js\" integrity=\"sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ\" crossorigin=\"anonymous\"></script>
@@ -271,7 +277,7 @@ class __TwigTemplate_bd9a870ea9d9b770ae8fbd68cd7493ffbdcff0a820fea7ad7a098666cf8
 
     public function getDebugInfo()
     {
-        return array (  247 => 74,  238 => 73,  221 => 64,  209 => 12,  205 => 11,  202 => 10,  193 => 9,  175 => 5,  163 => 81,  161 => 73,  151 => 65,  149 => 64,  143 => 60,  137 => 57,  134 => 56,  126 => 52,  120 => 50,  118 => 49,  114 => 48,  110 => 46,  107 => 45,  103 => 43,  101 => 42,  80 => 24,  77 => 23,  71 => 20,  67 => 18,  65 => 17,  60 => 14,  58 => 9,  51 => 5,  45 => 1,);
+        return array (  253 => 77,  244 => 76,  227 => 67,  215 => 12,  211 => 11,  208 => 10,  199 => 9,  181 => 5,  169 => 84,  167 => 76,  157 => 68,  155 => 67,  149 => 63,  143 => 60,  137 => 57,  134 => 56,  126 => 52,  120 => 50,  118 => 49,  114 => 48,  110 => 46,  107 => 45,  103 => 43,  101 => 42,  80 => 24,  77 => 23,  71 => 20,  67 => 18,  65 => 17,  60 => 14,  58 => 9,  51 => 5,  45 => 1,);
     }
 
     public function getSourceContext()
@@ -333,6 +339,9 @@ class __TwigTemplate_bd9a870ea9d9b770ae8fbd68cd7493ffbdcff0a820fea7ad7a098666cf8
                     {% else %}
                         <li class=\"nav-item\">
                             <a style=\"color: #fff;\" class=\"nav-link\" href=\"{{ path('app_login') }}\">Login</a>
+                        </li>
+                        <li class=\"nav-item\">
+                            <a style=\"color: #fff;\" class=\"nav-link\" href=\"{{ path('app_register') }}\">Register</a>
                         </li>
                     {% endif %}
                 </ul>

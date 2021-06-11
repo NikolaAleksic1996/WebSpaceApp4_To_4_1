@@ -66,10 +66,10 @@ class Article extends \App\Entity\Article implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'id', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'title', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'slug', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'content', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'publishedAt', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'author', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'heartCount', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'imageFilename', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'comments', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'tags', 'createdAt', 'updatedAt'];
+            return ['__isInitialized__', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'id', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'title', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'slug', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'content', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'publishedAt', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'heartCount', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'imageFilename', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'comments', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'tags', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'author', 'createdAt', 'updatedAt'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'id', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'title', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'slug', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'content', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'publishedAt', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'author', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'heartCount', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'imageFilename', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'comments', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'tags', 'createdAt', 'updatedAt'];
+        return ['__isInitialized__', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'id', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'title', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'slug', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'content', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'publishedAt', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'heartCount', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'imageFilename', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'comments', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'tags', '' . "\0" . 'App\\Entity\\Article' . "\0" . 'author', 'createdAt', 'updatedAt'];
     }
 
     /**
@@ -282,28 +282,6 @@ class Article extends \App\Entity\Article implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function getAuthor(): ?string
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getAuthor', []);
-
-        return parent::getAuthor();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setAuthor(string $author): \App\Entity\Article
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setAuthor', [$author]);
-
-        return parent::setAuthor($author);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function getHeartCount(): ?int
     {
 
@@ -442,6 +420,28 @@ class Article extends \App\Entity\Article implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeTag', [$tag]);
 
         return parent::removeTag($tag);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAuthor(): ?\App\Entity\User
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getAuthor', []);
+
+        return parent::getAuthor();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setAuthor(?\App\Entity\User $author): \App\Entity\Article
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setAuthor', [$author]);
+
+        return parent::setAuthor($author);
     }
 
     /**

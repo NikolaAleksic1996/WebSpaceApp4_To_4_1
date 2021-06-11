@@ -89,6 +89,7 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator
         //it doesn't bring me home_page
         if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
             return new RedirectResponse($targetPath);
+            //dump($targetPath);die;
         }
 
         return new RedirectResponse($this->router->generate('app_homepage'));
