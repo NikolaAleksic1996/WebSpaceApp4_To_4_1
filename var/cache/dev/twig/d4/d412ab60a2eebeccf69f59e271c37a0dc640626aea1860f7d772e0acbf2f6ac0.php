@@ -66,18 +66,8 @@ class __TwigTemplate_79a133c94c5cbd3daaf792106c627fb3544e46465a7d62baacfffe99e49
 
     ";
         // line 6
-        echo         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["articleForm"]) || array_key_exists("articleForm", $context) ? $context["articleForm"] : (function () { throw new RuntimeError('Variable "articleForm" does not exist.', 6, $this->source); })()), 'form_start');
-        echo "
-        ";
-        // line 7
-        echo $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock((isset($context["articleForm"]) || array_key_exists("articleForm", $context) ? $context["articleForm"] : (function () { throw new RuntimeError('Variable "articleForm" does not exist.', 7, $this->source); })()), 'widget');
-        echo "
-
-
-        <button type=\"submit\" class=\"btn btn-primary\">Create!</button>
-    ";
-        // line 11
-        echo         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["articleForm"]) || array_key_exists("articleForm", $context) ? $context["articleForm"] : (function () { throw new RuntimeError('Variable "articleForm" does not exist.', 11, $this->source); })()), 'form_end');
+        echo twig_include($this->env, $context, "article_admin/_form.html.twig", ["button_text" => "Create!"]);
+        // line 8
         echo "
 ";
         
@@ -100,7 +90,7 @@ class __TwigTemplate_79a133c94c5cbd3daaf792106c627fb3544e46465a7d62baacfffe99e49
 
     public function getDebugInfo()
     {
-        return array (  80 => 11,  73 => 7,  69 => 6,  65 => 4,  56 => 3,  34 => 1,);
+        return array (  71 => 8,  69 => 6,  65 => 4,  56 => 3,  34 => 1,);
     }
 
     public function getSourceContext()
@@ -110,12 +100,9 @@ class __TwigTemplate_79a133c94c5cbd3daaf792106c627fb3544e46465a7d62baacfffe99e49
 {% block content_body %}
     <h1>Lunch a new Article!</h1>
 
-    {{ form_start(articleForm) }}
-        {{ form_widget(articleForm) }}
-
-
-        <button type=\"submit\" class=\"btn btn-primary\">Create!</button>
-    {{ form_end(articleForm) }}
+    {{ include('article_admin/_form.html.twig', {
+        button_text: 'Create!'
+    }) }}
 {% endblock %}", "article_admin/new.html.twig", "/home/nikola/Desktop/Project/WebSpaceApp4_To_4_1/templates/article_admin/new.html.twig");
     }
 }

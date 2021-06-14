@@ -271,6 +271,17 @@ class Article extends \App\Entity\Article implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
+    public function isPublished(): bool
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'isPublished', []);
+
+        return parent::isPublished();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function setPublishedAt(?\DateTimeInterface $publishedAt): \App\Entity\Article
     {
 
@@ -442,6 +453,17 @@ class Article extends \App\Entity\Article implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setAuthor', [$author]);
 
         return parent::setAuthor($author);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function validate(\Symfony\Component\Validator\Context\ExecutionContextInterface $context, $payload)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'validate', [$context, $payload]);
+
+        return parent::validate($context, $payload);
     }
 
     /**

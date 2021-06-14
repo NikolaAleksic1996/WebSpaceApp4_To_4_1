@@ -66,10 +66,10 @@ class User extends \App\Entity\User implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'App\\Entity\\User' . "\0" . 'id', '' . "\0" . 'App\\Entity\\User' . "\0" . 'email', '' . "\0" . 'App\\Entity\\User' . "\0" . 'roles', '' . "\0" . 'App\\Entity\\User' . "\0" . 'firstName', '' . "\0" . 'App\\Entity\\User' . "\0" . 'password', '' . "\0" . 'App\\Entity\\User' . "\0" . 'twitterUsername', '' . "\0" . 'App\\Entity\\User' . "\0" . 'apiTokens', '' . "\0" . 'App\\Entity\\User' . "\0" . 'articles'];
+            return ['__isInitialized__', '' . "\0" . 'App\\Entity\\User' . "\0" . 'id', '' . "\0" . 'App\\Entity\\User' . "\0" . 'email', '' . "\0" . 'App\\Entity\\User' . "\0" . 'roles', '' . "\0" . 'App\\Entity\\User' . "\0" . 'firstName', '' . "\0" . 'App\\Entity\\User' . "\0" . 'password', '' . "\0" . 'App\\Entity\\User' . "\0" . 'twitterUsername', '' . "\0" . 'App\\Entity\\User' . "\0" . 'apiTokens', '' . "\0" . 'App\\Entity\\User' . "\0" . 'articles', '' . "\0" . 'App\\Entity\\User' . "\0" . 'agreedTermsAt'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'App\\Entity\\User' . "\0" . 'id', '' . "\0" . 'App\\Entity\\User' . "\0" . 'email', '' . "\0" . 'App\\Entity\\User' . "\0" . 'roles', '' . "\0" . 'App\\Entity\\User' . "\0" . 'firstName', '' . "\0" . 'App\\Entity\\User' . "\0" . 'password', '' . "\0" . 'App\\Entity\\User' . "\0" . 'twitterUsername', '' . "\0" . 'App\\Entity\\User' . "\0" . 'apiTokens', '' . "\0" . 'App\\Entity\\User' . "\0" . 'articles'];
+        return ['__isInitialized__', '' . "\0" . 'App\\Entity\\User' . "\0" . 'id', '' . "\0" . 'App\\Entity\\User' . "\0" . 'email', '' . "\0" . 'App\\Entity\\User' . "\0" . 'roles', '' . "\0" . 'App\\Entity\\User' . "\0" . 'firstName', '' . "\0" . 'App\\Entity\\User' . "\0" . 'password', '' . "\0" . 'App\\Entity\\User' . "\0" . 'twitterUsername', '' . "\0" . 'App\\Entity\\User' . "\0" . 'apiTokens', '' . "\0" . 'App\\Entity\\User' . "\0" . 'articles', '' . "\0" . 'App\\Entity\\User' . "\0" . 'agreedTermsAt'];
     }
 
     /**
@@ -420,6 +420,28 @@ class User extends \App\Entity\User implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, '__toString', []);
 
         return parent::__toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAgreedTermsAt(): ?\DateTimeInterface
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getAgreedTermsAt', []);
+
+        return parent::getAgreedTermsAt();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function agreedTerms(): \App\Entity\User
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'agreedTerms', []);
+
+        return parent::agreedTerms();
     }
 
 }

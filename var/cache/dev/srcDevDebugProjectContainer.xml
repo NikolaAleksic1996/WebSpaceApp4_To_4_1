@@ -459,6 +459,13 @@
         <argument type="service" id=".service_locator.ychIlgF.App\Controller\AccountController"/>
       </call>
     </service>
+    <service id="App\Controller\AdminUtilityController" class="App\Controller\AdminUtilityController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.ychIlgF.App\Controller\AdminUtilityController"/>
+      </call>
+    </service>
     <service id="App\Controller\ArticleAdminController" class="App\Controller\ArticleAdminController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
@@ -500,6 +507,15 @@
     <service id="App\Form\ArticleFormType" class="App\Form\ArticleFormType" public="false" autowire="true" autoconfigure="true">
       <tag name="form.type"/>
       <argument type="service" id="App\Repository\UserRepository"/>
+    </service>
+    <service id="App\Form\DataTransformer\EmailToUserTransformer" class="App\Form\DataTransformer\EmailToUserTransformer" public="false" autowire="true" autoconfigure="true"/>
+    <service id="App\Form\UserRegistrationFormType" class="App\Form\UserRegistrationFormType" public="false" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
+    </service>
+    <service id="App\Form\UserSelectTextType" class="App\Form\UserSelectTextType" public="false" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
+      <argument type="service" id="App\Repository\UserRepository"/>
+      <argument type="service" id="router.default"/>
     </service>
     <service id="App\Kernel" class="App\Kernel" public="false" autowire="true" autoconfigure="true"/>
     <service id="App\Repository\ApiTokenRepository" class="App\Repository\ApiTokenRepository" public="false" autowire="true" autoconfigure="true">
@@ -796,6 +812,8 @@
       </argument>
       <argument type="collection">
         <argument>App\Form\ArticleFormType</argument>
+        <argument>App\Form\UserRegistrationFormType</argument>
+        <argument>App\Form\UserSelectTextType</argument>
         <argument>Symfony\Component\Form\Extension\Core\Type\FormType</argument>
         <argument>Symfony\Component\Form\Extension\Core\Type\ChoiceType</argument>
         <argument>Symfony\Bridge\Doctrine\Form\Type\EntityType</argument>
@@ -1022,7 +1040,7 @@
       <argument type="service" id="form.resolved_type_factory"/>
     </service>
     <service id="form.extension" class="Symfony\Component\Form\Extension\DependencyInjection\DependencyInjectionExtension" public="false">
-      <argument type="service" id=".service_locator.xcr11Cw"/>
+      <argument type="service" id=".service_locator.PVUoDTE"/>
       <argument type="collection">
         <argument key="Symfony\Component\Form\Extension\Core\Type\FormType" type="iterator">
           <argument type="service" id="form.type_extension.form.http_foundation"/>
@@ -2137,14 +2155,6 @@
       </call>
       <call method="addListener">
         <argument>kernel.request</argument>
-        <argument type="collection">
-          <argument type="service" id="debug.debug_handlers_listener"/>
-          <argument>configure</argument>
-        </argument>
-        <argument>2048</argument>
-      </call>
-      <call method="addListener">
-        <argument>console.command</argument>
         <argument type="collection">
           <argument type="service" id="debug.debug_handlers_listener"/>
           <argument>configure</argument>
@@ -3804,7 +3814,7 @@
         <argument key="user">root</argument>
         <argument key="password">null</argument>
         <argument key="driverOptions" type="collection"/>
-        <argument key="serverVersion">5.6</argument>
+        <argument key="serverVersion">5.7</argument>
         <argument key="defaultTableOptions" type="collection">
           <argument key="charset">utf8mb4</argument>
           <argument key="collate">utf8mb4_unicode_ci</argument>
@@ -4829,6 +4839,9 @@
     <service id=".instanceof.Symfony\Component\DependencyInjection\ServiceSubscriberInterface.0.App\Controller\AccountController" class="App\Controller\AccountController" public="false" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\AccountController" class="App\Controller\AccountController" public="false" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\AccountController" class="App\Controller\AccountController" public="false" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\DependencyInjection\ServiceSubscriberInterface.0.App\Controller\AdminUtilityController" class="App\Controller\AdminUtilityController" public="false" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\AdminUtilityController" class="App\Controller\AdminUtilityController" public="false" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\AdminUtilityController" class="App\Controller\AdminUtilityController" public="false" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\DependencyInjection\ServiceSubscriberInterface.0.App\Controller\ArticleAdminController" class="App\Controller\ArticleAdminController" public="false" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ArticleAdminController" class="App\Controller\ArticleAdminController" public="false" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\ArticleAdminController" class="App\Controller\ArticleAdminController" public="false" autowire="true" autoconfigure="true" abstract="true"/>
@@ -4850,6 +4863,10 @@
     <service id=".abstract.instanceof.App\DataFixtures\UserFixture" class="App\DataFixtures\UserFixture" public="false" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\ArticleFormType" class="App\Form\ArticleFormType" public="false" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\ArticleFormType" class="App\Form\ArticleFormType" public="false" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\UserRegistrationFormType" class="App\Form\UserRegistrationFormType" public="false" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\UserRegistrationFormType" class="App\Form\UserRegistrationFormType" public="false" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\UserSelectTextType" class="App\Form\UserSelectTextType" public="false" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\UserSelectTextType" class="App\Form\UserSelectTextType" public="false" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\ApiTokenRepository" class="App\Repository\ApiTokenRepository" public="false" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\ApiTokenRepository" class="App\Repository\ApiTokenRepository" public="false" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\ArticleRepository" class="App\Repository\ArticleRepository" public="false" autowire="true" abstract="true"/>
@@ -5132,16 +5149,23 @@
         <argument key="logger" type="service" id="monolog.logger"/>
       </argument>
     </service>
+    <service id=".service_locator.pDN53fn" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="userRepository" type="service" id="App\Repository\UserRepository"/>
+      </argument>
+    </service>
     <service id=".service_locator.v_q6gfB" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="em" type="service" id="doctrine.orm.default_entity_manager"/>
       </argument>
     </service>
-    <service id=".service_locator.zv3hrPg" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.fQ2_UIE" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
-        <argument key="article" type="service" id=".errored..service_locator.zv3hrPg.App\Entity\Article"/>
+        <argument key="article" type="service" id=".errored..service_locator.fQ2_UIE.App\Entity\Article"/>
+        <argument key="em" type="service" id="doctrine.orm.default_entity_manager"/>
       </argument>
     </service>
     <service id=".service_locator.FgWuuJK" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
@@ -5192,11 +5216,12 @@
         <argument key="passwordEncoder" type="service" id="security.user_password_encoder.generic"/>
       </argument>
     </service>
-    <service id=".service_locator.USUlbxJ" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.3Um_v5D" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\AccountController::index" type="service" id=".service_locator.dOJ.0GD"/>
-        <argument key="App\Controller\ArticleAdminController::edit" type="service" id=".service_locator.zv3hrPg"/>
+        <argument key="App\Controller\AdminUtilityController::getUserApi" type="service" id=".service_locator.pDN53fn"/>
+        <argument key="App\Controller\ArticleAdminController::edit" type="service" id=".service_locator.fQ2_UIE"/>
         <argument key="App\Controller\ArticleAdminController::list" type="service" id=".service_locator.FgWuuJK"/>
         <argument key="App\Controller\ArticleAdminController::new" type="service" id=".service_locator.v_q6gfB"/>
         <argument key="App\Controller\ArticleController::homepage" type="service" id=".service_locator.Mc5zpHk"/>
@@ -5206,7 +5231,8 @@
         <argument key="App\Controller\SecurityController::login" type="service" id=".service_locator.ypl2DZZ"/>
         <argument key="App\Controller\SecurityController::register" type="service" id=".service_locator.YouA0Lm"/>
         <argument key="App\Controller\AccountController:index" type="service" id=".service_locator.dOJ.0GD"/>
-        <argument key="App\Controller\ArticleAdminController:edit" type="service" id=".service_locator.zv3hrPg"/>
+        <argument key="App\Controller\AdminUtilityController:getUserApi" type="service" id=".service_locator.pDN53fn"/>
+        <argument key="App\Controller\ArticleAdminController:edit" type="service" id=".service_locator.fQ2_UIE"/>
         <argument key="App\Controller\ArticleAdminController:list" type="service" id=".service_locator.FgWuuJK"/>
         <argument key="App\Controller\ArticleAdminController:new" type="service" id=".service_locator.v_q6gfB"/>
         <argument key="App\Controller\ArticleController:homepage" type="service" id=".service_locator.Mc5zpHk"/>
@@ -5274,10 +5300,12 @@
       <argument type="service" id="debug.argument_resolver.variadic.inner"/>
       <argument type="service" id="debug.stopwatch"/>
     </service>
-    <service id=".service_locator.xcr11Cw" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.PVUoDTE" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Form\ArticleFormType" type="service" id="App\Form\ArticleFormType"/>
+        <argument key="App\Form\UserRegistrationFormType" type="service" id="App\Form\UserRegistrationFormType"/>
+        <argument key="App\Form\UserSelectTextType" type="service" id="App\Form\UserSelectTextType"/>
         <argument key="Symfony\Bridge\Doctrine\Form\Type\EntityType" type="service" id="form.type.entity"/>
         <argument key="Symfony\Component\Form\Extension\Core\Type\ChoiceType" type="service" id="form.type.choice"/>
         <argument key="Symfony\Component\Form\Extension\Core\Type\FormType" type="service" id="form.type.form"/>
@@ -5463,6 +5491,11 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.ychIlgF" method="withContext"/>
     </service>
+    <service id=".service_locator.ychIlgF.App\Controller\AdminUtilityController" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+      <argument>App\Controller\AdminUtilityController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.ychIlgF" method="withContext"/>
+    </service>
     <service id=".service_locator.ychIlgF.App\Controller\ArticleAdminController" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <argument>App\Controller\ArticleAdminController</argument>
       <argument type="service" id="service_container"/>
@@ -5608,11 +5641,11 @@
       <argument type="service" id="security.token_storage"/>
     </service>
     <service id="debug.argument_resolver.service.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" public="false">
-      <argument type="service" id=".service_locator.USUlbxJ"/>
+      <argument type="service" id=".service_locator.3Um_v5D"/>
     </service>
     <service id="debug.argument_resolver.default.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" public="false"/>
     <service id="debug.argument_resolver.variadic.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\VariadicValueResolver" public="false"/>
-    <service id=".errored..service_locator.zv3hrPg.App\Entity\Article" class="App\Entity\Article"/>
+    <service id=".errored..service_locator.fQ2_UIE.App\Entity\Article" class="App\Entity\Article"/>
     <service id=".errored..service_locator.YwRB2Jv.App\Entity\Article" class="App\Entity\Article"/>
     <service id=".errored..service_locator.N4f9btw.App\Entity\Article" class="App\Entity\Article"/>
     <service id=".service_locator.HKoUR8q" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
@@ -5952,7 +5985,7 @@
     <service id="security.authentication.session_strategy.main" alias="security.authentication.session_strategy"/>
     <service id="security.user_checker.main" alias="security.user_checker" public="false"/>
     <service id="Symfony\Component\Security\Core\User\UserCheckerInterface" alias="security.user_checker" public="false"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.USUlbxJ"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.3Um_v5D"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem" public="false"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id=".service_locator.AoifO_3" alias=".2_ServiceLocator~feUH4tE" public="false"/>

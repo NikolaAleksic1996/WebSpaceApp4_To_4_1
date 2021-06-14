@@ -66,6 +66,7 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                 $routes = array(
                     '/account' => array(array('_route' => 'app_account', '_controller' => 'App\\Controller\\AccountController::index'), null, null, null),
                     '/api/account' => array(array('_route' => 'api_account', '_controller' => 'App\\Controller\\AccountController::accountApi'), null, null, null),
+                    '/admin/utility/users' => array(array('_route' => 'admin_utility_users', '_controller' => 'App\\Controller\\AdminUtilityController::getUserApi'), null, array('GET' => 0), null),
                     '/admin/article/new' => array(array('_route' => 'admin_article_new', '_controller' => 'App\\Controller\\ArticleAdminController::new'), null, null, null),
                     '/admin/article' => array(array('_route' => 'admin_article_list', '_controller' => 'App\\Controller\\ArticleAdminController::list'), null, null, null),
                     '/' => array(array('_route' => 'app_homepage', '_controller' => 'App\\Controller\\ArticleController::homepage'), null, null, null),
@@ -131,7 +132,7 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                 switch ($m = (int) $matches['MARK']) {
                     default:
                         $routes = array(
-                            35 => array(array('_route' => 'app_articleadmin_edit', '_controller' => 'App\\Controller\\ArticleAdminController::edit'), array('id'), null, null),
+                            35 => array(array('_route' => 'admin_article_edit', '_controller' => 'App\\Controller\\ArticleAdminController::edit'), array('id'), null, null),
                             59 => array(array('_route' => 'article_show', '_controller' => 'App\\Controller\\ArticleController::show'), array('slug'), null, null),
                             72 => array(array('_route' => 'article_toggle_heart', '_controller' => 'App\\Controller\\ArticleController::toggleArticleHeart'), array('slug'), array('POST' => 0), null),
                             111 => array(array('_route' => '_twig_error_test', '_controller' => 'twig.controller.preview_error::previewErrorPageAction', '_format' => 'html'), array('code', '_format'), null, null),

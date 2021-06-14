@@ -74,29 +74,40 @@ class __TwigTemplate_6ad463565117e304d89032ae4611aeb9add06fd3c73876d1c7cdd4e9acd
             <th>Title</th>
             <th>Author</th>
             <th>Published?</th>
+            <th>&nbsp;</th>
         </tr>
         </thead>
         <tbody>
         ";
-        // line 17
+        // line 18
         $context['_parent'] = $context;
-        $context['_seq'] = twig_ensure_traversable((isset($context["articles"]) || array_key_exists("articles", $context) ? $context["articles"] : (function () { throw new RuntimeError('Variable "articles" does not exist.', 17, $this->source); })()));
+        $context['_seq'] = twig_ensure_traversable((isset($context["articles"]) || array_key_exists("articles", $context) ? $context["articles"] : (function () { throw new RuntimeError('Variable "articles" does not exist.', 18, $this->source); })()));
         foreach ($context['_seq'] as $context["_key"] => $context["article"]) {
-            // line 18
+            // line 19
             echo "            <tr>
                 <td>";
-            // line 19
-            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["article"], "title", [], "any", false, false, false, 19), "html", null, true);
+            // line 20
+            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["article"], "title", [], "any", false, false, false, 20), "html", null, true);
             echo "</td>
                 <td>";
-            // line 20
-            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["article"], "author", [], "any", false, false, false, 20), "email", [], "any", false, false, false, 20), "html", null, true);
+            // line 21
+            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["article"], "author", [], "any", false, false, false, 21), "email", [], "any", false, false, false, 21), "html", null, true);
             echo "</td>
                 <td>
                     <span class=\"fa fa-";
-            // line 22
-            echo ((twig_get_attribute($this->env, $this->source, $context["article"], "isPublished", [], "any", false, false, false, 22)) ? ("check") : ("times"));
+            // line 23
+            echo ((twig_get_attribute($this->env, $this->source, $context["article"], "isPublished", [], "any", false, false, false, 23)) ? ("check") : ("times"));
             echo "\"></span>
+                </td>
+                <td>
+                    <a href=\"";
+            // line 26
+            echo twig_escape_filter($this->env, $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("admin_article_edit", ["id" => twig_get_attribute($this->env, $this->source,             // line 27
+$context["article"], "id", [], "any", false, false, false, 27)]), "html", null, true);
+            // line 28
+            echo "\">
+                        <span class=\"fa fa-pencil\"></span>
+                    </a>
                 </td>
             </tr>
         ";
@@ -104,7 +115,7 @@ class __TwigTemplate_6ad463565117e304d89032ae4611aeb9add06fd3c73876d1c7cdd4e9acd
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_iterated'], $context['_key'], $context['article'], $context['_parent'], $context['loop']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 26
+        // line 34
         echo "        </tbody>
     </table>
 ";
@@ -128,7 +139,7 @@ class __TwigTemplate_6ad463565117e304d89032ae4611aeb9add06fd3c73876d1c7cdd4e9acd
 
     public function getDebugInfo()
     {
-        return array (  108 => 26,  98 => 22,  93 => 20,  89 => 19,  86 => 18,  82 => 17,  65 => 4,  56 => 3,  34 => 1,);
+        return array (  119 => 34,  108 => 28,  106 => 27,  105 => 26,  99 => 23,  94 => 21,  90 => 20,  87 => 19,  83 => 18,  65 => 4,  56 => 3,  34 => 1,);
     }
 
     public function getSourceContext()
@@ -146,6 +157,7 @@ class __TwigTemplate_6ad463565117e304d89032ae4611aeb9add06fd3c73876d1c7cdd4e9acd
             <th>Title</th>
             <th>Author</th>
             <th>Published?</th>
+            <th>&nbsp;</th>
         </tr>
         </thead>
         <tbody>
@@ -155,6 +167,13 @@ class __TwigTemplate_6ad463565117e304d89032ae4611aeb9add06fd3c73876d1c7cdd4e9acd
                 <td>{{ article.author.email }}</td>
                 <td>
                     <span class=\"fa fa-{{ article.isPublished ? 'check' : 'times' }}\"></span>
+                </td>
+                <td>
+                    <a href=\"{{ path('admin_article_edit', {
+                        id: article.id
+                    }) }}\">
+                        <span class=\"fa fa-pencil\"></span>
+                    </a>
                 </td>
             </tr>
         {% endfor %}
