@@ -1,0 +1,27 @@
+{
+  "name": "webspaceapp4_to_4_1",
+  "version": "1.0.0",
+  "description": "Well hi there! This repository holds the code and script for the [Stellar Development with Symfony 4](https://knpuniversity.com/screencast/symfony4) course on KnpUniversity.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "@algolia/autocomplete-theme-classic": "^1.1.0",
+    "autocomplete.js": "^0.38.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NikolaAleksic1996/WebSpaceApp4_To_4_1.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NikolaAleksic1996/WebSpaceApp4_To_4_1/issues"
+  },
+  "homepage": "https://github.com/NikolaAleksic1996/WebSpaceApp4_To_4_1#readme"
+}

@@ -54,20 +54,38 @@ class __TwigTemplate_12f0fb71e31faec4415a69a44920126df164c852551962aab34899cfe86
         echo "
     ";
         // line 8
-        echo $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(twig_get_attribute($this->env, $this->source, (isset($context["articleForm"]) || array_key_exists("articleForm", $context) ? $context["articleForm"] : (function () { throw new RuntimeError('Variable "articleForm" does not exist.', 8, $this->source); })()), "publishedAt", [], "any", false, false, false, 8), 'row');
+        if (twig_get_attribute($this->env, $this->source, ($context["articleForm"] ?? null), "publishedAt", [], "any", true, true, false, 8)) {
+            // line 9
+            echo "         ";
+            echo $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(twig_get_attribute($this->env, $this->source, (isset($context["articleForm"]) || array_key_exists("articleForm", $context) ? $context["articleForm"] : (function () { throw new RuntimeError('Variable "articleForm" does not exist.', 9, $this->source); })()), "publishedAt", [], "any", false, false, false, 9), 'row');
+            echo "
+    ";
+        }
+        // line 11
+        echo "    ";
+        echo $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(twig_get_attribute($this->env, $this->source, (isset($context["articleForm"]) || array_key_exists("articleForm", $context) ? $context["articleForm"] : (function () { throw new RuntimeError('Variable "articleForm" does not exist.', 11, $this->source); })()), "location", [], "any", false, false, false, 11), 'row');
         echo "
     ";
-        // line 9
-        echo $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(twig_get_attribute($this->env, $this->source, (isset($context["articleForm"]) || array_key_exists("articleForm", $context) ? $context["articleForm"] : (function () { throw new RuntimeError('Variable "articleForm" does not exist.', 9, $this->source); })()), "author", [], "any", false, false, false, 9), 'row');
+        // line 12
+        if (twig_get_attribute($this->env, $this->source, ($context["articleForm"] ?? null), "specificLocationName", [], "any", true, true, false, 12)) {
+            // line 13
+            echo "        ";
+            echo $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(twig_get_attribute($this->env, $this->source, (isset($context["articleForm"]) || array_key_exists("articleForm", $context) ? $context["articleForm"] : (function () { throw new RuntimeError('Variable "articleForm" does not exist.', 13, $this->source); })()), "specificLocationName", [], "any", false, false, false, 13), 'row');
+            echo "
+    ";
+        }
+        // line 15
+        echo "    ";
+        echo $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(twig_get_attribute($this->env, $this->source, (isset($context["articleForm"]) || array_key_exists("articleForm", $context) ? $context["articleForm"] : (function () { throw new RuntimeError('Variable "articleForm" does not exist.', 15, $this->source); })()), "author", [], "any", false, false, false, 15), 'row');
         echo "
 
 <button type=\"submit\" class=\"btn btn-primary\">";
-        // line 11
-        echo twig_escape_filter($this->env, (isset($context["button_text"]) || array_key_exists("button_text", $context) ? $context["button_text"] : (function () { throw new RuntimeError('Variable "button_text" does not exist.', 11, $this->source); })()), "html", null, true);
+        // line 17
+        echo twig_escape_filter($this->env, (isset($context["button_text"]) || array_key_exists("button_text", $context) ? $context["button_text"] : (function () { throw new RuntimeError('Variable "button_text" does not exist.', 17, $this->source); })()), "html", null, true);
         echo "!</button>
 ";
-        // line 12
-        echo         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["articleForm"]) || array_key_exists("articleForm", $context) ? $context["articleForm"] : (function () { throw new RuntimeError('Variable "articleForm" does not exist.', 12, $this->source); })()), 'form_end');
+        // line 18
+        echo         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["articleForm"]) || array_key_exists("articleForm", $context) ? $context["articleForm"] : (function () { throw new RuntimeError('Variable "articleForm" does not exist.', 18, $this->source); })()), 'form_end');
         
         $__internal_085b0142806202599c7fe3b329164a92397d8978207a37e79d70b8c52599e33e->leave($__internal_085b0142806202599c7fe3b329164a92397d8978207a37e79d70b8c52599e33e_prof);
 
@@ -88,7 +106,7 @@ class __TwigTemplate_12f0fb71e31faec4415a69a44920126df164c852551962aab34899cfe86
 
     public function getDebugInfo()
     {
-        return array (  70 => 12,  66 => 11,  61 => 9,  57 => 8,  53 => 7,  50 => 6,  48 => 4,  45 => 3,  41 => 1,);
+        return array (  88 => 18,  84 => 17,  78 => 15,  72 => 13,  70 => 12,  65 => 11,  59 => 9,  57 => 8,  53 => 7,  50 => 6,  48 => 4,  45 => 3,  41 => 1,);
     }
 
     public function getSourceContext()
@@ -100,7 +118,13 @@ class __TwigTemplate_12f0fb71e31faec4415a69a44920126df164c852551962aab34899cfe86
         label: 'Article title'
     }) }}
     {{ form_row(articleForm.content) }}
-    {{ form_row(articleForm.publishedAt) }}
+    {% if articleForm.publishedAt is defined %}
+         {{ form_row(articleForm.publishedAt) }}
+    {% endif %}
+    {{ form_row(articleForm.location) }}
+    {%  if articleForm.specificLocationName is defined %}
+        {{ form_row(articleForm.specificLocationName) }}
+    {% endif %}
     {{ form_row(articleForm.author) }}
 
 <button type=\"submit\" class=\"btn btn-primary\">{{ button_text }}!</button>

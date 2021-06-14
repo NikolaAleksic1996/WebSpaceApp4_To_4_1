@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\Model\UserRegistrationFormModel;
 use App\Form\UserRegistrationFormType;
 use App\Security\LoginAuthenticator;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,21 +52,25 @@ class SecurityController extends AbstractController
         //if ($request->isMethod('POST')) {
         if ($form->isSubmitted() && $form->isValid()) {
             /**
-             * @var User $user
+             * @var UserRegistrationFormModel $userModel
              */
-            $user = $form->getData();
+            $userModel = $form->getData();
+
+            $user = new User();
+            $user->setEmail($userModel->email);
 
             //  $user->setEmail($request->request->get('email'));
             //   $user->setFirstName('Mystery');
             $user->setPassword($passwordEncoder->encodePassword(
                 $user,
-                $form['plainPassword']->getData()
+                $userModel->plainPassword
+                //$form['plainPassword']->getData()
             //$user->getPassword()
             //$request->request->get('password')
             ));
 
 
-            if (true === $form['agreeTerms']->getData()) {
+            if (true === $userModel->agreeTerms) {
                 $user->agreedTerms();
             }
 

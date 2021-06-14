@@ -509,6 +509,10 @@
       <argument type="service" id="App\Repository\UserRepository"/>
     </service>
     <service id="App\Form\DataTransformer\EmailToUserTransformer" class="App\Form\DataTransformer\EmailToUserTransformer" public="false" autowire="true" autoconfigure="true"/>
+    <service id="App\Form\Model\UserRegistrationFormModel" class="App\Form\Model\UserRegistrationFormModel" public="false" autowire="true" autoconfigure="true"/>
+    <service id="App\Form\TypeExtension\TextareaSizeExtension" class="App\Form\TypeExtension\TextareaSizeExtension" public="false" autowire="true" autoconfigure="true">
+      <tag name="form.type_extension" extended_type="Symfony\Component\Form\Extension\Core\Type\TextareaType"/>
+    </service>
     <service id="App\Form\UserRegistrationFormType" class="App\Form\UserRegistrationFormType" public="false" autowire="true" autoconfigure="true">
       <tag name="form.type"/>
     </service>
@@ -568,6 +572,11 @@
       <tag name="twig.extension"/>
       <tag name="container.service_subscriber"/>
       <argument type="service" id=".service_locator.3iwUaMJ.App\Twig\AppExtension"/>
+    </service>
+    <service id="App\Validator\UniqueUser" class="App\Validator\UniqueUser" public="false" autowire="true" autoconfigure="true"/>
+    <service id="App\Validator\UniqueUserValidator" class="App\Validator\UniqueUserValidator" public="false" autowire="true" autoconfigure="true">
+      <tag name="validator.constraint_validator"/>
+      <argument type="service" id="App\Repository\UserRepository"/>
     </service>
     <service id="controller_name_converter" class="Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser" public="false">
       <tag name="monolog.logger" channel="request"/>
@@ -819,6 +828,7 @@
         <argument>Symfony\Bridge\Doctrine\Form\Type\EntityType</argument>
       </argument>
       <argument type="collection">
+        <argument>App\Form\TypeExtension\TextareaSizeExtension</argument>
         <argument>Symfony\Component\Form\Extension\HttpFoundation\Type\FormTypeHttpFoundationExtension</argument>
         <argument>Symfony\Component\Form\Extension\Validator\Type\FormTypeValidatorExtension</argument>
         <argument>Symfony\Component\Form\Extension\Validator\Type\RepeatedTypeValidatorExtension</argument>
@@ -1042,6 +1052,9 @@
     <service id="form.extension" class="Symfony\Component\Form\Extension\DependencyInjection\DependencyInjectionExtension" public="false">
       <argument type="service" id=".service_locator.PVUoDTE"/>
       <argument type="collection">
+        <argument key="Symfony\Component\Form\Extension\Core\Type\TextareaType" type="iterator">
+          <argument type="service" id="App\Form\TypeExtension\TextareaSizeExtension"/>
+        </argument>
         <argument key="Symfony\Component\Form\Extension\Core\Type\FormType" type="iterator">
           <argument type="service" id="form.type_extension.form.http_foundation"/>
           <argument type="service" id="form.type_extension.form.validator"/>
@@ -1193,7 +1206,7 @@
       <argument type="service" id=".1_PhpArrayAdapter~SWzzxjV"/>
     </service>
     <service id="validator.validator_factory" class="Symfony\Component\Validator\ContainerConstraintValidatorFactory" public="false">
-      <argument type="service" id=".service_locator.HKoUR8q"/>
+      <argument type="service" id=".service_locator.pfoxd3i"/>
     </service>
     <service id="validator.expression" class="Symfony\Component\Validator\Constraints\ExpressionValidator" public="false">
       <tag name="validator.constraint_validator" alias="validator.expression"/>
@@ -2155,6 +2168,14 @@
       </call>
       <call method="addListener">
         <argument>kernel.request</argument>
+        <argument type="collection">
+          <argument type="service" id="debug.debug_handlers_listener"/>
+          <argument>configure</argument>
+        </argument>
+        <argument>2048</argument>
+      </call>
+      <call method="addListener">
+        <argument>console.command</argument>
         <argument type="collection">
           <argument type="service" id="debug.debug_handlers_listener"/>
           <argument>configure</argument>
@@ -4883,6 +4904,8 @@
     <service id=".instanceof.Twig_ExtensionInterface.0.App\Twig\AppExtension" class="App\Twig\AppExtension" public="false" autowire="true" abstract="true"/>
     <service id=".instanceof.Twig\Extension\ExtensionInterface.0.App\Twig\AppExtension" class="App\Twig\AppExtension" public="false" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Twig\AppExtension" class="App\Twig\AppExtension" public="false" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Validator\ConstraintValidatorInterface.0.App\Validator\UniqueUserValidator" class="App\Validator\UniqueUserValidator" public="false" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Validator\UniqueUserValidator" class="App\Validator\UniqueUserValidator" public="false" autowire="true" autoconfigure="true" abstract="true"/>
     <service id="maker.auto_command.make_auth" class="Symfony\Bundle\MakerBundle\Command\MakerCommand" public="false">
       <tag name="console.command" command="make:auth"/>
       <argument type="service" id="maker.maker.make_authenticator"/>
@@ -5648,9 +5671,10 @@
     <service id=".errored..service_locator.fQ2_UIE.App\Entity\Article" class="App\Entity\Article"/>
     <service id=".errored..service_locator.YwRB2Jv.App\Entity\Article" class="App\Entity\Article"/>
     <service id=".errored..service_locator.N4f9btw.App\Entity\Article" class="App\Entity\Article"/>
-    <service id=".service_locator.HKoUR8q" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.pfoxd3i" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
+        <argument key="App\Validator\UniqueUserValidator" type="service" id="App\Validator\UniqueUserValidator"/>
         <argument key="Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntityValidator" type="service" id="doctrine.orm.validator.unique"/>
         <argument key="Symfony\Component\Security\Core\Validator\Constraints\UserPasswordValidator" type="service" id="security.validator.user_password"/>
         <argument key="Symfony\Component\Validator\Constraints\EmailValidator" type="service" id="validator.email"/>

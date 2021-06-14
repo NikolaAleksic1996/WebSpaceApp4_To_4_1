@@ -68,11 +68,11 @@ class __TwigTemplate_569ef04408eaf1be03c97ff948730481140ae995b7494a7ac9c55f98d19
         $this->displayParentBlock("javascripts", $context, $blocks);
         echo "
 
-    <script src=\"https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js\"></script>
+    <script src=\"https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js\"></script>
     <script src=\"";
         // line 7
         echo twig_escape_filter($this->env, $this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("js/algolia-autocomplete.js"), "html", null, true);
-        echo "></script>\"
+        echo "\"></script>
 ";
         
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02->leave($__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02_prof);
@@ -157,8 +157,8 @@ class __TwigTemplate_569ef04408eaf1be03c97ff948730481140ae995b7494a7ac9c55f98d19
 {% block javascripts %}
     {{ parent() }}
 
-    <script src=\"https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js\"></script>
-    <script src=\"{{ asset('js/algolia-autocomplete.js') }}></script>\"
+    <script src=\"https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js\"></script>
+    <script src=\"{{ asset('js/algolia-autocomplete.js') }}\"></script>
 {% endblock %}
 
 {% block stylesheets %}

@@ -183,33 +183,33 @@ class __TwigTemplate_2d816254a7a9eee7b29e415a4a80c02b2db33d035b60b9e2ec8b8373765
         echo         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 40, $this->source); })()), 'form_start', ["attr" => ["class" => "form-signin"]]);
         // line 42
         echo "
-        <h1 class=\"h3 mb-3 font-weight-normal\">Register</h1>
+    <h1 class=\"h3 mb-3 font-weight-normal\">Register</h1>
 
     ";
         // line 46
-        echo "        ";
+        echo "    ";
         echo $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(twig_get_attribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 46, $this->source); })()), "email", [], "any", false, false, false, 46), 'row', ["attr" => ["placeholder" => "Email"]]);
         // line 48
         echo "
-        ";
+    ";
         // line 49
         echo $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(twig_get_attribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 49, $this->source); })()), "plainPassword", [], "any", false, false, false, 49), 'row', ["attr" => ["placeholder" => "Password"]]);
         // line 51
         echo "
-        ";
+    ";
         // line 52
         echo $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(twig_get_attribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 52, $this->source); })()), "agreeTerms", [], "any", false, false, false, 52), 'row');
         echo "
 
-        <button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">
-            Register
-        </button>
+    <button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">
+        Register
+    </button>
     ";
         // line 57
         echo         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 57, $this->source); })()), 'form_end');
         echo "
 
-   ";
+    ";
         
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02->leave($__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02_prof);
 
@@ -243,10 +243,10 @@ class __TwigTemplate_2d816254a7a9eee7b29e415a4a80c02b2db33d035b60b9e2ec8b8373765
 {% block stylesheets %}
     {{ parent() }} {# get three designs on base.twig #}
 
-    <link rel=\"stylesheet\" href=\"{{ asset('css/login.css') }}\">{# a ovde uzimam samo iz login.css#}
+    <link rel=\"stylesheet\" href=\"{{ asset('css/login.css') }}\">{# a ovde uzimam samo iz login.css #}
 {% endblock %}
 
-{# Creating our Theme! This code is copied from from_div_layout#}
+{# Creating our Theme! This code is copied from from_div_layout #}
 {% block form_row %}
     {%- set widget_attr = {} -%}
     {%- if help is not empty -%}
@@ -277,23 +277,23 @@ class __TwigTemplate_2d816254a7a9eee7b29e415a4a80c02b2db33d035b60b9e2ec8b8373765
     {{ form_start(registrationForm, {
         attr: {class: 'form-signin'}
     }) }}
-        <h1 class=\"h3 mb-3 font-weight-normal\">Register</h1>
+    <h1 class=\"h3 mb-3 font-weight-normal\">Register</h1>
 
     {# {{ form_widget(registrationForm) }} #}
-        {{ form_row(registrationForm.email, {
-            attr: {placeholder: 'Email'}
-        }) }}
-        {{ form_row(registrationForm.plainPassword, {
-            attr: {placeholder: 'Password'}
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+    {{ form_row(registrationForm.email, {
+        attr: {placeholder: 'Email'}
+    }) }}
+    {{ form_row(registrationForm.plainPassword, {
+        attr: {placeholder: 'Password'}
+    }) }}
+    {{ form_row(registrationForm.agreeTerms) }}
 
-        <button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">
-            Register
-        </button>
+    <button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">
+        Register
+    </button>
     {{ form_end(registrationForm) }}
 
-   {# <form class=\"form-signin\" method=\"post\">
+    {# <form class=\"form-signin\" method=\"post\">
 
 
 
