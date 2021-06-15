@@ -25,6 +25,7 @@ class srcDevDebugProjectContainerUrlGenerator extends Symfony\Component\Routing\
         'admin_utility_users' => array(array(), array('_controller' => 'App\\Controller\\AdminUtilityController::getUserApi'), array(), array(array('text', '/admin/utility/users')), array(), array()),
         'admin_article_new' => array(array(), array('_controller' => 'App\\Controller\\ArticleAdminController::new'), array(), array(array('text', '/admin/article/new')), array(), array()),
         'admin_article_edit' => array(array('id'), array('_controller' => 'App\\Controller\\ArticleAdminController::edit'), array(), array(array('text', '/edit'), array('variable', '/', '[^/]++', 'id'), array('text', '/admin/article')), array(), array()),
+        'admin_article_location_select' => array(array(), array('_controller' => 'App\\Controller\\ArticleAdminController::getSpecificLocationSelect'), array(), array(array('text', '/admin/article/location-select')), array(), array()),
         'admin_article_list' => array(array(), array('_controller' => 'App\\Controller\\ArticleAdminController::list'), array(), array(array('text', '/admin/article')), array(), array()),
         'app_homepage' => array(array(), array('_controller' => 'App\\Controller\\ArticleController::homepage'), array(), array(array('text', '/')), array(), array()),
         'article_show' => array(array('slug'), array('_controller' => 'App\\Controller\\ArticleController::show'), array(), array(array('variable', '/', '[^/]++', 'slug'), array('text', '/news')), array(), array()),

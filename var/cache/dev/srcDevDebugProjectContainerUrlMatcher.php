@@ -68,6 +68,7 @@ class srcDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
                     '/api/account' => array(array('_route' => 'api_account', '_controller' => 'App\\Controller\\AccountController::accountApi'), null, null, null),
                     '/admin/utility/users' => array(array('_route' => 'admin_utility_users', '_controller' => 'App\\Controller\\AdminUtilityController::getUserApi'), null, array('GET' => 0), null),
                     '/admin/article/new' => array(array('_route' => 'admin_article_new', '_controller' => 'App\\Controller\\ArticleAdminController::new'), null, null, null),
+                    '/admin/article/location-select' => array(array('_route' => 'admin_article_location_select', '_controller' => 'App\\Controller\\ArticleAdminController::getSpecificLocationSelect'), null, null, null),
                     '/admin/article' => array(array('_route' => 'admin_article_list', '_controller' => 'App\\Controller\\ArticleAdminController::list'), null, null, null),
                     '/' => array(array('_route' => 'app_homepage', '_controller' => 'App\\Controller\\ArticleController::homepage'), null, null, null),
                     '/admin/comment' => array(array('_route' => 'comment_admin', '_controller' => 'App\\Controller\\CommentAdminController::index'), null, null, null),

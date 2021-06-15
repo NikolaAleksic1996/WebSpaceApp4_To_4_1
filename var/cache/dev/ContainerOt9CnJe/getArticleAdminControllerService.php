@@ -8,6 +8,7 @@ use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 
 include_once $this->targetDirs[3].'/vendor/symfony/framework-bundle/Controller/ControllerTrait.php';
 include_once $this->targetDirs[3].'/vendor/symfony/framework-bundle/Controller/AbstractController.php';
+include_once $this->targetDirs[3].'/src/Controller/BaseController.php';
 include_once $this->targetDirs[3].'/src/Controller/ArticleAdminController.php';
 
 $this->services['App\Controller\ArticleAdminController'] = $instance = new \App\Controller\ArticleAdminController();

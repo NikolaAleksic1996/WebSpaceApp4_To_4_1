@@ -25,7 +25,6 @@ class __TwigTemplate_569ef04408eaf1be03c97ff948730481140ae995b7494a7ac9c55f98d19
 
         $this->blocks = [
             'javascripts' => [$this, 'block_javascripts'],
-            'stylesheets' => [$this, 'block_stylesheets'],
             'content_body' => [$this, 'block_content_body'],
         ];
     }
@@ -68,10 +67,9 @@ class __TwigTemplate_569ef04408eaf1be03c97ff948730481140ae995b7494a7ac9c55f98d19
         $this->displayParentBlock("javascripts", $context, $blocks);
         echo "
 
-    <script src=\"https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js\"></script>
     <script src=\"";
-        // line 7
-        echo twig_escape_filter($this->env, $this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("js/algolia-autocomplete.js"), "html", null, true);
+        // line 6
+        echo twig_escape_filter($this->env, $this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("js/admin_article_form.js"), "html", null, true);
         echo "\"></script>
 ";
         
@@ -83,33 +81,6 @@ class __TwigTemplate_569ef04408eaf1be03c97ff948730481140ae995b7494a7ac9c55f98d19
     }
 
     // line 10
-    public function block_stylesheets($context, array $blocks = [])
-    {
-        $__internal_085b0142806202599c7fe3b329164a92397d8978207a37e79d70b8c52599e33e = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
-        $__internal_085b0142806202599c7fe3b329164a92397d8978207a37e79d70b8c52599e33e->enter($__internal_085b0142806202599c7fe3b329164a92397d8978207a37e79d70b8c52599e33e_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "stylesheets"));
-
-        $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02 = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
-        $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02->enter($__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "stylesheets"));
-
-        // line 11
-        echo "    ";
-        $this->displayParentBlock("stylesheets", $context, $blocks);
-        echo "
-
-    <link rel=\"stylesheet\" href=\"";
-        // line 13
-        echo twig_escape_filter($this->env, $this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("css/algolia-autocomplete.css"), "html", null, true);
-        echo "\">
-";
-        
-        $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02->leave($__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02_prof);
-
-        
-        $__internal_085b0142806202599c7fe3b329164a92397d8978207a37e79d70b8c52599e33e->leave($__internal_085b0142806202599c7fe3b329164a92397d8978207a37e79d70b8c52599e33e_prof);
-
-    }
-
-    // line 16
     public function block_content_body($context, array $blocks = [])
     {
         $__internal_085b0142806202599c7fe3b329164a92397d8978207a37e79d70b8c52599e33e = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
@@ -118,13 +89,13 @@ class __TwigTemplate_569ef04408eaf1be03c97ff948730481140ae995b7494a7ac9c55f98d19
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02 = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02->enter($__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "content_body"));
 
-        // line 17
+        // line 11
         echo "    <h1>Edit the Article!</h1>
 
     ";
-        // line 19
+        // line 13
         echo twig_include($this->env, $context, "article_admin/_form.html.twig", ["button_text" => "Update!"]);
-        // line 21
+        // line 15
         echo "
 ";
         
@@ -147,7 +118,7 @@ class __TwigTemplate_569ef04408eaf1be03c97ff948730481140ae995b7494a7ac9c55f98d19
 
     public function getDebugInfo()
     {
-        return array (  128 => 21,  126 => 19,  122 => 17,  113 => 16,  101 => 13,  95 => 11,  86 => 10,  74 => 7,  67 => 4,  58 => 3,  36 => 1,);
+        return array (  99 => 15,  97 => 13,  93 => 11,  84 => 10,  72 => 6,  66 => 4,  57 => 3,  35 => 1,);
     }
 
     public function getSourceContext()
@@ -157,15 +128,9 @@ class __TwigTemplate_569ef04408eaf1be03c97ff948730481140ae995b7494a7ac9c55f98d19
 {% block javascripts %}
     {{ parent() }}
 
-    <script src=\"https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js\"></script>
-    <script src=\"{{ asset('js/algolia-autocomplete.js') }}\"></script>
+    <script src=\"{{ asset('js/admin_article_form.js') }}\"></script>
 {% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
-
-    <link rel=\"stylesheet\" href=\"{{ asset('css/algolia-autocomplete.css') }}\">
-{% endblock %}
 
 {% block content_body %}
     <h1>Edit the Article!</h1>
